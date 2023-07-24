@@ -2,7 +2,7 @@
   <section>
     <div
       class="input-field-container"
-      v-for="input in inputArray"
+      v-for="input in schemaObjectArray"
       :key="input.id"
       style="transition: all 0.6s ease-in"
     >
@@ -11,18 +11,23 @@
           solo
           placeholder="Add field"
           style="max-height: 30px !important; padding: 0 !important"
-          v-model="input.fieldName"
+          v-model="input.schemaKey"
         ></v-text-field>
       </div>
 
       <div class="input-field-container-input-type">
-        <!-- <v-select :items="['Foo', 'Bar']" label="Items"></v-select> -->
-        <v-text-field
+        <v-select
+          :items="items"
+          label="Solo field"
+          solo
+          :value="selectedItem"
+        ></v-select>
+        <!-- <v-text-field
           solo
           placeholder="Add field"
           style="max-height: 30px !important; padding: 0 !important"
-          v-model="input.fieldType"
-        ></v-text-field>
+          v-model="input.schemaType"
+        ></v-text-field> -->
       </div>
       <div class="input-field-container-cancle-btn">
         <svg
@@ -32,7 +37,7 @@
           stroke-width="1.5"
           stroke="currentColor"
           class="input-field-container-cancle-btn-svg"
-          @click="removeDataField(input.id)"
+          @click="deleteSchemaObject(input.id)"
         >
           <path
             stroke-linecap="round"
@@ -48,40 +53,43 @@
 <script>
 export default {
   props: {
-    arr: {
+    objectList: {
       type: Array,
       require: true,
     },
   },
   created() {
-    this.inputArray = this.arr;
+    this.schemaObjectArray = this.objectList;
   },
   data() {
     return {
       showList: false,
-      inputArray: [],
-      selectedItem: null,
+      schemaObjectArray: [],
+      selectedItem: "String",
+      items: ["String", "Number", "URL", "ID"],
     };
   },
   updated() {
-    console.log(this.inputArray);
+    console.log(this.schemaObjectArray);
   },
   methods: {
-    removeDataField(id) {
-      this.inputArray = this.inputArray.filter((field) => field.id !== id);
-      console.log("updatedData", this.inputArray);
-      this.$emit("deleteFieldFromArray", this.inputArray);
+    deleteSchemaObject(id) {
+      this.schemaObjectArray = this.schemaObjectArray.filter(
+        (field) => field.id !== id
+      );
+      this.$emit("updateSchemaArray", this.schemaObjectArray);
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import "../sass/style.scss";
 .input-field-container {
   width: 80%;
   height: 3rem;
   margin: 0.5rem auto;
-  background: white;
+  background: $primary-white;
 
   display: flex;
   align-items: center;
@@ -111,9 +119,9 @@ export default {
     display: grid;
     place-items: center;
     &-svg {
-      height: 2rem;
-      width: 2rem;
-      stroke: #000;
+      height: 1.4rem;
+      width: 1.4rem;
+      stroke: $primary-black;
     }
   }
 }

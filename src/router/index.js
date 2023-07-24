@@ -1,7 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import HomeView from "../views/LandingPage.vue";
-import ApiView from "../views/ApiView.vue";
+import LandingPage from "../views/LandingPage.vue";
 
 Vue.use(VueRouter);
 
@@ -9,12 +8,7 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: HomeView,
-  },
-  {
-    path: "/mock-api",
-    name: "Api",
-    component: ApiView,
+    component: LandingPage,
   },
 ];
 

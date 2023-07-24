@@ -22,7 +22,7 @@ export default {
   height: auto;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  // overflow: hidden;
 }
 </style>
 

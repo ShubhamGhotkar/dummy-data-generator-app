@@ -14,15 +14,13 @@
         </div>
         <div class="input-container-item-input-field">
           <InputField
-            :arr="InputFieldArray"
-            @deleteFieldFromArray="updateData"
+            :objectList="schemaObjectArray"
+            @updateSchemaArray="setUpdatedSchemaArray"
           />
         </div>
       </div>
       <span>OR</span>
-      <div class="input-container-item">
-        <JsonField />
-      </div>
+      <div class="input-container-item" ref="jsoneditor"></div>
     </div>
     <div class="row-input">
       <div class="row-input-item"><span>Rows</span></div>
@@ -51,50 +49,89 @@
 <script>
 import { v4 as uuidv4 } from "uuid";
 import InputField from "@/components/InputField.vue";
-import JsonField from "@/components/JsonField.vue";
+import JSONEditor from "jsoneditor";
+import "jsoneditor/dist/jsoneditor.css";
 
 export default {
+  mounted() {
+    const container = this.$refs.jsoneditor;
+    const jsonSchema = {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+          // minLength: 1,
+          // maxLength: 50,
+        },
+        age: {
+          type: "string",
+          minimum: 0,
+          maximum: 120,
+        },
+        email: {
+          type: "string",
+          format: "email",
+        },
+      },
+      // required: ["name", "age"],
+    };
+
+    const options = {
+      mode: "code",
+      enableClipboard: true,
+      enableSort: false,
+      search: false,
+      schema: jsonSchema,
+      enableTransform: false,
+    };
+    this.jsonEditor = new JSONEditor(container, options);
+
+    this.jsonEditor.set({
+      first_name: "String",
+      last_name: "String",
+      age: "Number",
+    });
+  },
   data() {
     return {
-      showAlert: false,
-      InputFieldArray: [
+      schemaObjectArray: [
         {
           id: uuidv4(),
-          fieldName: "first_name",
-          fieldType: "String",
+          schemaKey: "first_name",
+          schemaType: "String",
         },
         {
           id: uuidv4(),
-          fieldName: "last_name",
-          fieldType: "String",
+          schemaKey: "last_name",
+          schemaType: "String",
         },
       ],
     };
   },
   components: {
     InputField,
-    JsonField,
+    // JsonField,
   },
 
   methods: {
     addAnotherFieldToInputArray() {
-      let newField = {
+      let schemaObject = {
         id: uuidv4(),
-        fieldName: "gender",
-        fieldType: "Number",
+        schemaKey: "gender",
+        schemaType: "Number",
       };
 
-      this.InputFieldArray.push(newField);
+      this.schemaObjectArray.push(schemaObject);
     },
-    updateData(data) {
-      console.log(data);
-      this.InputFieldArray = data;
+    setUpdatedSchemaArray(data) {
+      this.schemaObjectArray = data;
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import "../sass/style.scss";
 .homepage-container {
   width: 98%;
   height: 93vh;
@@ -113,7 +150,7 @@ export default {
   &-item {
     flex: 0 0 48%;
     height: 100%;
-    background: whitesmoke;
+    background: $primary-whitsmoke;
     position: relative;
 
     &-tittle {
@@ -128,7 +165,7 @@ export default {
         font-size: 1.2rem;
         font-weight: 500;
         letter-spacing: 0.03rem;
-        background: white;
+        background: $primary-white;
         border-radius: 2px;
         margin-top: -0.4rem;
         padding: 0 0 0.3rem 0;
@@ -160,13 +197,13 @@ export default {
         font-size: 1rem;
         font-weight: 500;
 
-        background: #8472d6;
-        color: white;
+        background: $background-purple;
+        color: $primary-white;
         text-align: center;
         padding: 0.3rem 0.6rem;
         border-radius: 0 0.2rem 0 0;
         &:hover {
-          background: #cdc4f5;
+          background: $background-purple-light;
         }
       }
     }
@@ -203,7 +240,7 @@ export default {
 .output-container {
   width: 100%;
   height: 42%;
-  background: rgba(245, 196, 106, 0.362);
+  background: $background-orange-light;
   position: relative;
   &-btn {
     width: max-content;
@@ -222,6 +259,7 @@ export default {
 </style>
 
 <style lang="scss">
+@import "../sass/style.scss";
 .v-text-field.v-text-field--solo.v-input--dense > .v-input__control {
   min-height: 35px !important;
 }
@@ -242,4 +280,32 @@ export default {
     border-radius: 0 0 0 0.5rem !important;
   }
 }
+
+//
+
+/* Add your custom styles here */
+.jsoneditor {
+  /* Your styles for the main JSON Editor container */
+  // background: red !important;
+  border: 1.2px solid $primary-gray !important;
+}
+
+.jsoneditor-tree {
+  /* Your styles for the tree view mode */
+}
+
+.jsoneditor-form {
+  /* Your styles for the form view mode */
+}
+
+.jsoneditor-text {
+  /* Your styles for the text view mode */
+}
+
+.jsoneditor-menu {
+  /* Your styles for the editor's menu */
+  background: $background-purple;
+}
+
+/* Add more styles as needed */
 </style>
