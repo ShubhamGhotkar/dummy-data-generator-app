@@ -5,11 +5,19 @@
         <div class="input-container-item-tittle">
           <span>Field Name</span>
           <span>Type</span>
-          <div class="input-container-item-add-field">
+          <div
+            class="input-container-item-add-field"
+            @click="addAnotherFieldToInputArray"
+          >
             <span>+ Add Another Field</span>
           </div>
         </div>
-        <!-- <InputField /> -->
+        <div class="input-container-item-input-field">
+          <InputField
+            :arr="InputFieldArray"
+            @deleteFieldFromArray="updateData"
+          />
+        </div>
       </div>
       <span>OR</span>
       <div class="input-container-item">
@@ -41,19 +49,47 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import InputField from "@/components/InputField.vue";
+import { v4 as uuidv4 } from "uuid";
+import InputField from "@/components/InputField.vue";
 import JsonField from "@/components/JsonField.vue";
 
 export default {
   data() {
     return {
       showAlert: false,
+      InputFieldArray: [
+        {
+          id: uuidv4(),
+          fieldName: "first_name",
+          fieldType: "String",
+        },
+        {
+          id: uuidv4(),
+          fieldName: "last_name",
+          fieldType: "String",
+        },
+      ],
     };
   },
   components: {
-    // InputField,
+    InputField,
     JsonField,
+  },
+
+  methods: {
+    addAnotherFieldToInputArray() {
+      let newField = {
+        id: uuidv4(),
+        fieldName: "gender",
+        fieldType: "Number",
+      };
+
+      this.InputFieldArray.push(newField);
+    },
+    updateData(data) {
+      console.log(data);
+      this.InputFieldArray = data;
+    },
   },
 };
 </script>
@@ -79,11 +115,6 @@ export default {
     height: 100%;
     background: whitesmoke;
     position: relative;
-    overflow-y: scroll;
-    scroll-behavior: smooth;
-    &::-webkit-scrollbar {
-      width: 0;
-    }
 
     &-tittle {
       width: 100%;
@@ -103,6 +134,15 @@ export default {
         padding: 0 0 0.3rem 0;
       }
     }
+    &-input-field {
+      width: 100%;
+      height: 85%;
+      overflow-y: scroll;
+      scroll-behavior: smooth;
+      &::-webkit-scrollbar {
+        width: 0;
+      }
+    }
 
     &-add-field {
       // height: 3rem;
@@ -112,18 +152,21 @@ export default {
       position: absolute;
       bottom: 0.25rem;
       left: 0;
+      z-index: 999;
 
       & span {
         text-transform: uppercase;
         letter-spacing: 0.03rem;
         font-size: 1rem;
         font-weight: 500;
-        background: white;
+
+        background: #8472d6;
+        color: white;
         text-align: center;
         padding: 0.3rem 0.6rem;
         border-radius: 0 0.2rem 0 0;
         &:hover {
-          background: rgba(225, 223, 223, 0.73);
+          background: #cdc4f5;
         }
       }
     }
@@ -167,7 +210,7 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 0.2rem;
+    gap: 0.1rem;
 
     &:nth-child(2) {
       position: absolute;

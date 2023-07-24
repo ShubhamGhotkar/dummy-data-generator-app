@@ -18,7 +18,7 @@
 
 <script>
 export default {
-  methods: {},
+  methods: { handleRun() {} },
 };
 </script>
 
