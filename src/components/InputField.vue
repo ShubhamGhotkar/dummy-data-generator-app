@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="input-field-section">
     <div
       class="input-field-container"
       v-for="input in schemaObjectArray"
@@ -16,18 +16,21 @@
       </div>
 
       <div class="input-field-container-input-type">
-        <v-select
-          :items="items"
-          label="Solo field"
-          solo
-          :value="selectedItem"
-        ></v-select>
-        <!-- <v-text-field
-          solo
+        <v-btn
+          elevation="0"
           placeholder="Add field"
-          style="max-height: 30px !important; padding: 0 !important"
-          v-model="input.schemaType"
-        ></v-text-field> -->
+          style="
+            height: 2.2rem;
+            width: 12rem;
+            text-align: start !important;
+            padding: 0 !important;
+            background: white;
+            border-radius: 0.3rem;
+            border: 1px solid rgb(201, 200, 200) !important;
+            margin-top: 0.4rem;
+          "
+          ><span class="schema-type-span">{{ input.schemaType }}</span></v-btn
+        >
       </div>
       <div class="input-field-container-cancle-btn">
         <svg
@@ -85,32 +88,41 @@ export default {
 
 <style lang="scss" scoped>
 @import "../sass/style.scss";
+.input-field-section {
+  width: 100%;
+  height: max-content;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
 .input-field-container {
-  width: 80%;
+  width: 100%;
   height: 3rem;
-  margin: 0.5rem auto;
-  background: $primary-white;
+  // margin: 0.5rem auto;
+  // background: $primary-white;
+  // background: yellow;
 
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 0.7rem;
 
   &-input-field {
-    flex: 0 0 45%;
+    flex: 0 0 42%;
     height: 100%;
     display: grid;
     place-items: center;
-    gap: 1rem;
   }
   &-input-type {
-    flex: 0 0 45%;
+    flex: 0 0 42%;
     height: 100%;
     display: grid;
     align-items: center;
     justify-content: end;
   }
   &-cancle-btn {
-    flex: 0 0 10%;
+    flex: 0 0 3%;
     height: 100%;
     display: grid;
     place-items: center;
@@ -137,11 +149,17 @@ export default {
     z-index: 999;
   }
 }
+
+.schema-type-span {
+  height: 100%;
+  width: 100%;
+  padding-left: 0.8rem;
+}
 </style>
 
 <style lang="scss">
 .v-text-field.v-text-field--solo .v-input__control {
-  min-height: 24px !important;
+  min-height: fit-content !important;
   padding: 0;
 }
 

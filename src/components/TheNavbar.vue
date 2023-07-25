@@ -8,6 +8,7 @@
           elevation="2"
           class="v-bar-container-btn"
           @click="handleRun"
+          style="background-color: $primary-sky !important"
         >
           generate data >></v-btn
         >
@@ -34,5 +35,13 @@ export default {
     padding: 0 2rem !important;
     margin-right: 2rem;
   }
+}
+</style>
+
+<style lang="scss">
+@import "../sass/style.scss";
+.theme--light.v-app-bar.v-toolbar.v-sheet {
+  // background-color: $primary-sky !important;
+  background: $navbar-background !important;
 }
 </style>

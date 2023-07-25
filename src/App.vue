@@ -24,6 +24,9 @@ export default {
   flex-direction: column;
   // overflow: hidden;
 }
+.content {
+  padding-top: 0.3rem;
+}
 </style>
 
 <style lang="scss">

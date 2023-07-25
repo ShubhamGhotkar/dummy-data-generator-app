@@ -3,98 +3,70 @@
     <div class="input-container">
       <div class="input-container-item">
         <div class="input-container-item-tittle">
-          <span>Field Name</span>
-          <span>Type</span>
-          <div
-            class="input-container-item-add-field"
-            @click="addAnotherFieldToInputArray"
-          >
-            <span>+ Add Another Field</span>
-          </div>
+          <span class="field-name">Field Name</span>
+          <span class="field-type">Type</span>
         </div>
-        <div class="input-container-item-input-field">
+        <div class="input-container-item-input-field field-container">
           <InputField
             :objectList="schemaObjectArray"
             @updateSchemaArray="setUpdatedSchemaArray"
           />
         </div>
       </div>
-      <span>OR</span>
-      <div class="input-container-item" ref="jsoneditor"></div>
+      <div class="input-container-item editor-container">
+        <JsonEditor />
+      </div>
     </div>
     <div class="row-input">
-      <div class="row-input-item"><span>Rows</span></div>
-      <div class="row-input-item">
-        <v-text-field
-          solo
-          dense
-          placeholder="No of Rows"
-          class="row-input-item-text-field"
-          type="Number"
-        ></v-text-field>
+      <div class="row-input-add-field" @click="addAnotherFieldToInputArray">
+        <span>+ Add Another Field</span>
+      </div>
+      <div style="display: flex; gap: 0.5rem; align-items: center">
+        <div class="row-input-item">
+          <span class="row-input-item-rows">Rows</span>
+        </div>
+        <div class="row-input-item">
+          <v-text-field
+            solo
+            dense
+            placeholder="No of Rows"
+            class="row-input-item-text-field"
+            type="Number"
+          ></v-text-field>
+        </div>
       </div>
     </div>
+    <CombineBtn text_1="Json" text_2="Api" />
     <div class="output-container">
-      <div class="output-container-btn">
+      <div class="output-container-editor">
+        <JsonEditor />
+      </div>
+      <!-- <div class="output-container-btn">
         <v-btn elevation="1" class="output-btn">JSON</v-btn>
         <v-btn elevation="1" class="output-btn">API</v-btn>
-      </div>
-      <div class="output-container-btn">
         <v-btn elevation="1" class="output-btn-copy">Copy</v-btn>
-      </div>
+      </div> -->
     </div>
+    <!-- <TypePopup /> -->
   </section>
 </template>
 
 <script>
 import { v4 as uuidv4 } from "uuid";
 import InputField from "@/components/InputField.vue";
-import JSONEditor from "jsoneditor";
-import "jsoneditor/dist/jsoneditor.css";
+import JsonEditor from "@/components/JsonEditor.vue";
+import CombineBtn from "@/components/CombineBtn.vue";
+// import TypePopup from "@/components/TypePopup.vue";
 
 export default {
-  mounted() {
-    const container = this.$refs.jsoneditor;
-    const jsonSchema = {
-      type: "object",
-      properties: {
-        name: {
-          type: "string",
-          // minLength: 1,
-          // maxLength: 50,
-        },
-        age: {
-          type: "string",
-          minimum: 0,
-          maximum: 120,
-        },
-        email: {
-          type: "string",
-          format: "email",
-        },
-      },
-      // required: ["name", "age"],
-    };
-
-    const options = {
-      mode: "code",
-      enableClipboard: true,
-      enableSort: false,
-      search: false,
-      schema: jsonSchema,
-      enableTransform: false,
-    };
-    this.jsonEditor = new JSONEditor(container, options);
-
-    this.jsonEditor.set({
-      first_name: "String",
-      last_name: "String",
-      age: "Number",
-    });
-  },
   data() {
     return {
       schemaObjectArray: [
+        {
+          id: uuidv4(),
+          schemaKey: "_id",
+          schemaType: "Number",
+        },
         {
           id: uuidv4(),
           schemaKey: "first_name",
@@ -105,12 +77,30 @@ export default {
           schemaKey: "last_name",
           schemaType: "String",
         },
+
+        {
+          id: uuidv4(),
+          schemaKey: "age",
+          schemaType: "Number",
+        },
+        {
+          id: uuidv4(),
+          schemaKey: "Image",
+          schemaType: "URL",
+        },
+        // {
+        //   id: uuidv4(),
+        //   schemaKey: "gender",
+        //   schemaType: "String",
+        // },
       ],
     };
   },
   components: {
     InputField,
-    // JsonField,
+    JsonEditor,
+    CombineBtn,
+    // TypePopup,
   },
 
   methods: {
@@ -118,7 +108,7 @@ export default {
       let schemaObject = {
         id: uuidv4(),
         schemaKey: "gender",
-        schemaType: "Number",
+        schemaType: "String",
       };
 
       this.schemaObjectArray.push(schemaObject);
@@ -132,6 +122,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../sass/style.scss";
+
 .homepage-container {
   width: 98%;
   height: 93vh;
@@ -145,66 +136,31 @@ export default {
   justify-content: center;
   align-items: center;
 
-  gap: 1rem;
+  gap: 3rem;
 
   &-item {
-    flex: 0 0 48%;
+    flex: 0 0 45%;
     height: 100%;
-    background: $primary-whitsmoke;
     position: relative;
 
     &-tittle {
       width: 100%;
-      display: flex;
-      justify-content: space-evenly;
-      gap: 1rem;
+      margin: 0 auto;
 
       & span {
-        width: 15rem;
-        text-align: center;
         font-size: 1.2rem;
-        font-weight: 500;
+        font-weight: 400;
         letter-spacing: 0.03rem;
-        background: $primary-white;
-        border-radius: 2px;
-        margin-top: -0.4rem;
-        padding: 0 0 0.3rem 0;
+        color: $primary-gray;
       }
     }
     &-input-field {
       width: 100%;
-      height: 85%;
+      height: 90%;
       overflow-y: scroll;
       scroll-behavior: smooth;
       &::-webkit-scrollbar {
-        width: 0;
-      }
-    }
-
-    &-add-field {
-      // height: 3rem;
-      width: max-content;
-      cursor: pointer;
-
-      position: absolute;
-      bottom: 0.25rem;
-      left: 0;
-      z-index: 999;
-
-      & span {
-        text-transform: uppercase;
-        letter-spacing: 0.03rem;
-        font-size: 1rem;
-        font-weight: 500;
-
-        background: $background-purple;
-        color: $primary-white;
-        text-align: center;
-        padding: 0.3rem 0.6rem;
-        border-radius: 0 0.2rem 0 0;
-        &:hover {
-          background: $background-purple-light;
-        }
+        width: 1rem;
       }
     }
   }
@@ -218,20 +174,47 @@ export default {
 // ROW INPUT
 .row-input {
   width: 100%;
-  height: 3rem;
+  height: 3.5rem;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
+  border-top: 1px solid rgb(201, 200, 200);
+  border-bottom: 1px solid rgb(201, 200, 200);
+  margin: 0.5rem 0;
 
-  padding: 0.5rem 0 0.5rem 2.5rem;
+  padding: 0.7rem 0 0.3rem 10rem;
+  &-add-field {
+    width: max-content;
+    cursor: pointer;
+
+    & span {
+      text-transform: uppercase;
+      letter-spacing: 0.03rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border: 1px solid rgb(201, 200, 200) !important;
+      background: $primary-white;
+      color: $primary-gray;
+      text-align: center;
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.2rem;
+      &:hover {
+        background: $primary-whitsmoke;
+      }
+    }
+  }
 
   &-item {
     font-size: 1.2rem;
-    font-weight: 500;
+    &-rows {
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.03rem;
+      color: $primary-gray;
+    }
     &-text-field {
       width: 9rem;
-
       height: 2rem !important ;
       margin: 0 0 0.4rem 0 !important;
     }
@@ -240,72 +223,90 @@ export default {
 .output-container {
   width: 100%;
   height: 42%;
-  background: $background-orange-light;
-  position: relative;
-  &-btn {
-    width: max-content;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 0.1rem;
+  // background: $primary-whitsmoke;
+  // position: relative;
+  display: flex;
+  // gap: 1rem;
 
-    &:nth-child(2) {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
+  // padding: 0.5rem 0 0.5rem 0.5rem;
+  border: 0.5rem solid $primary-whitsmoke;
+  margin-top: 0.5rem;
+  &-btn {
+    flex: 0 0 4%;
+    // width: max-content;
+    // display: flex;
+    // justify-content: flex-start;
+    // align-items: flex-start;
+    // gap: 0.1rem;
+
+    // position: absolute;
+    // &:not(&:nth-last-child(1)) {
+    //   top: 0;
+    //   left: 0;
+    //   z-index: 999;
+    // }
+    // &:nth-last-child(1) {
+    //   top: 0;
+    //   right: 0;
+    // }
   }
+  &-editor {
+    flex: 0 0 93%;
+    height: 100%;
+    // background: red;
+  }
+}
+.editor-container {
+  background: whitesmoke;
+  padding: 0.3rem;
+}
+.field-container {
+  padding: 0 5rem;
+}
+.field-name {
+  padding-left: 6.5rem;
+}
+.field-type {
+  padding-left: 6.5rem;
 }
 </style>
 
 <style lang="scss">
 @import "../sass/style.scss";
-.v-text-field.v-text-field--solo.v-input--dense > .v-input__control {
+.row-input-item
+  > .v-text-field.v-text-field--solo.v-input--dense
+  > .v-input__control {
   min-height: 35px !important;
 }
 .v-btn:not(.v-btn--round).v-size--default {
   min-width: 10px !important;
+  min-width: 100px !important;
   border-radius: 0;
   padding: 1rem !important;
+  margin-bottom: 0.05rem;
 }
-.output-btn {
-  &:nth-child(1) {
-    border-radius: 0 0 0.5rem 0 !important;
-  }
-  &:nth-child(2) {
-    border-radius: 0 0 0.5rem 0.5rem !important;
-  }
+// .output-btn {
+//   &:nth-child(1) {
+//     border-radius: 0 0 0.3rem 0 !important;
+//   }
+//   &:nth-child(2) {
+//     border-radius: 0 0 0.3rem 0.3rem !important;
+//   }
 
-  &-copy {
-    border-radius: 0 0 0 0.5rem !important;
-  }
-}
-
-//
-
-/* Add your custom styles here */
-.jsoneditor {
-  /* Your styles for the main JSON Editor container */
-  // background: red !important;
-  border: 1.2px solid $primary-gray !important;
-}
-
-.jsoneditor-tree {
-  /* Your styles for the tree view mode */
+//   &-copy {
+//     border-radius: 0 0 0 0.3rem !important;
+//   }
+// }
+.row-input-item
+  > .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
+  > .v-input__control
+  > .v-input__slot {
+  box-shadow: none;
+  border: 1px solid rgb(201, 200, 200) !important;
 }
 
-.jsoneditor-form {
-  /* Your styles for the form view mode */
-}
-
-.jsoneditor-text {
-  /* Your styles for the text view mode */
-}
-
-.jsoneditor-menu {
-  /* Your styles for the editor's menu */
-  background: $background-purple;
-}
-
-/* Add more styles as needed */
+// .output-container .jse-menu .svelte-497ud4,
+// .output-container .jse-navigation-bar.svelte-15r3ahw.svelte-15r3ahw {
+//   display: none;
+// }
 </style>
