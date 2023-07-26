@@ -1,6 +1,6 @@
 <template>
   <v-app-bar dense elevation="4" outlined class="v-bar-container">
-    <v-row>
+    <!-- <v-row>
       <v-col>
         <v-btn
           color="primary"
@@ -13,7 +13,7 @@
           generate data >></v-btn
         >
       </v-col>
-    </v-row>
+    </v-row> -->
   </v-app-bar>
 </template>
 

@@ -1,7 +1,11 @@
 <template>
   <section class="homepage-container">
     <div class="input-container">
-      <div class="input-container-item">
+      <div
+        class="input-container-item"
+        @mouseover="showInputFloat = true"
+        @mouseout="showInputFloat = false"
+      >
         <div class="input-container-item-tittle">
           <span class="field-name">Field Name</span>
           <span class="field-type">Type</span>
@@ -12,51 +16,47 @@
             @updateSchemaArray="setUpdatedSchemaArray"
           />
         </div>
+        <FloatBtn
+          :showFloat="showInputFloat"
+          @addAnotherFieldToInputArray="addAnotherFieldToInputArray"
+        />
       </div>
-      <div class="input-container-item editor-container">
-        <JsonEditor />
-      </div>
-    </div>
-    <div class="row-input">
-      <div class="row-input-add-field" @click="addAnotherFieldToInputArray">
-        <span>+ Add Another Field</span>
-      </div>
-      <div style="display: flex; gap: 0.5rem; align-items: center">
-        <div class="row-input-item">
-          <span class="row-input-item-rows">Rows</span>
-        </div>
-        <div class="row-input-item">
-          <v-text-field
-            solo
-            dense
-            placeholder="No of Rows"
-            class="row-input-item-text-field"
-            type="Number"
-          ></v-text-field>
-        </div>
+      <div
+        class="input-container-item editor-container"
+        @mouseover="showEditorFloat = true"
+        @mouseout="showEditorFloat = false"
+      >
+        <!-- <JsonEditor /> -->
+        <FloatBtn :add_field="false" :showFloat="showEditorFloat" />
       </div>
     </div>
-    <CombineBtn text_1="Json" text_2="Api" />
     <div class="output-container">
-      <div class="output-container-editor">
-        <JsonEditor />
+      <div class="output-container-btn">
+        <v-btn elevation="1" class="output-btn" @click="showJson = true"
+          >JSON</v-btn
+        >
+        <v-btn elevation="1" class="output-btn" @click="showJson = false"
+          >API</v-btn
+        >
+        <v-btn elevation="1" class="output-btn text-copy" v-if="showCopyBtn"
+          >Copy</v-btn
+        >
       </div>
-      <!-- <div class="output-container-btn">
-        <v-btn elevation="1" class="output-btn">JSON</v-btn>
-        <v-btn elevation="1" class="output-btn">API</v-btn>
-        <v-btn elevation="1" class="output-btn-copy">Copy</v-btn>
-      </div> -->
+      <div
+        class="output-container-editor"
+        @mouseover="showCopyBtn = true"
+        @mouseout="showCopyBtn = false"
+      >
+        <!-- <JsonEditor v-if="showJson" /> -->
+      </div>
     </div>
-    <!-- <TypePopup /> -->
   </section>
 </template>
 
 <script>
 import { v4 as uuidv4 } from "uuid";
 import InputField from "@/components/InputField.vue";
-import JsonEditor from "@/components/JsonEditor.vue";
-import CombineBtn from "@/components/CombineBtn.vue";
-// import TypePopup from "@/components/TypePopup.vue";
+import FloatBtn from "@/components/FloatBtn.vue";
 
 export default {
   data() {
@@ -94,13 +94,15 @@ export default {
         //   schemaType: "String",
         // },
       ],
+      showJson: true,
+      showCopyBtn: false,
+      showInputFloat: false,
+      showEditorFloat: false,
     };
   },
   components: {
     InputField,
-    JsonEditor,
-    CombineBtn,
-    // TypePopup,
+    FloatBtn,
   },
 
   methods: {
@@ -131,9 +133,9 @@ export default {
 }
 .input-container {
   width: 100%;
-  height: 50%;
+  height: 55%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 
   gap: 3rem;
@@ -142,7 +144,10 @@ export default {
     flex: 0 0 45%;
     height: 100%;
     position: relative;
+    justify-self: flex-start;
+    padding: 1rem 0 0 0;
 
+    box-shadow: 0 0 0.9rem rgb(218, 216, 216);
     &-tittle {
       width: 100%;
       margin: 0 auto;
@@ -156,6 +161,7 @@ export default {
     }
     &-input-field {
       width: 100%;
+
       height: 90%;
       overflow-y: scroll;
       scroll-behavior: smooth;
@@ -204,60 +210,26 @@ export default {
       }
     }
   }
-
-  &-item {
-    font-size: 1.2rem;
-    &-rows {
-      font-size: 1.1rem;
-      font-weight: 400;
-      letter-spacing: 0.03rem;
-      color: $primary-gray;
-    }
-    &-text-field {
-      width: 9rem;
-      height: 2rem !important ;
-      margin: 0 0 0.4rem 0 !important;
-    }
-  }
 }
 .output-container {
   width: 100%;
   height: 42%;
-  // background: $primary-whitsmoke;
-  // position: relative;
-  display: flex;
-  // gap: 1rem;
 
-  // padding: 0.5rem 0 0.5rem 0.5rem;
+  position: relative;
+  display: flex;
+
   border: 0.5rem solid $primary-whitsmoke;
   margin-top: 0.5rem;
   &-btn {
     flex: 0 0 4%;
-    // width: max-content;
-    // display: flex;
-    // justify-content: flex-start;
-    // align-items: flex-start;
-    // gap: 0.1rem;
-
-    // position: absolute;
-    // &:not(&:nth-last-child(1)) {
-    //   top: 0;
-    //   left: 0;
-    //   z-index: 999;
-    // }
-    // &:nth-last-child(1) {
-    //   top: 0;
-    //   right: 0;
-    // }
+    height: 100%;
   }
   &-editor {
     flex: 0 0 93%;
     height: 100%;
-    // background: red;
   }
 }
 .editor-container {
-  background: whitesmoke;
   padding: 0.3rem;
 }
 .field-container {
@@ -268,6 +240,12 @@ export default {
 }
 .field-type {
   padding-left: 6.5rem;
+}
+.text-copy {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 999;
 }
 </style>
 

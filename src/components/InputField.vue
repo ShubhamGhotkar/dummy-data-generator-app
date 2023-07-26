@@ -16,21 +16,7 @@
       </div>
 
       <div class="input-field-container-input-type">
-        <v-btn
-          elevation="0"
-          placeholder="Add field"
-          style="
-            height: 2.2rem;
-            width: 12rem;
-            text-align: start !important;
-            padding: 0 !important;
-            background: white;
-            border-radius: 0.3rem;
-            border: 1px solid rgb(201, 200, 200) !important;
-            margin-top: 0.4rem;
-          "
-          ><span class="schema-type-span">{{ input.schemaType }}</span></v-btn
-        >
+        <DialogPopup :field_type="input.schemaType" />
       </div>
       <div class="input-field-container-cancle-btn">
         <svg
@@ -54,12 +40,16 @@
 </template>
 
 <script>
+import DialogPopup from "./DialogPopup.vue";
 export default {
   props: {
     objectList: {
       type: Array,
       require: true,
     },
+  },
+  components: {
+    DialogPopup,
   },
   created() {
     this.schemaObjectArray = this.objectList;
