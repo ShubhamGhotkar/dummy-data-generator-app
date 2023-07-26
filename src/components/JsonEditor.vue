@@ -2,7 +2,8 @@
   <JsonEditorVue
     v-model="jsonData"
     style="height: 100%; width: 100%"
-    :options="editorOptions"
+    mode="text"
+    :search="false"
   />
 </template>
 
@@ -25,10 +26,6 @@ export default {
       jsonData: { first_name: "String", last_name: "String" },
       editorOptions: {
         mode: "code",
-        disable_properties: true,
-        no_additional_properties: true,
-        required_by_default: false,
-        disable_edit_json: true,
       },
     };
   },

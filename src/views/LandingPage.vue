@@ -28,6 +28,7 @@
         @mouseleave="handleHideEditorFloat"
       >
         <!-- <JsonEditor /> -->
+        <JsonEditor2 />
         <FloatBtn
           :add_field="false"
           :showFloat="showEditorFloat"
@@ -56,7 +57,7 @@
         @mouseenter="handleShowCopyBtn"
         @mouseleave="handleHideCopyBtn"
       >
-        <JsonEditor v-if="showJson" />
+        <JsonEditor2 v-if="showJson" />
       </div>
     </div>
   </section>
@@ -66,7 +67,8 @@
 import { v4 as uuidv4 } from "uuid";
 import InputField from "@/components/InputField.vue";
 import FloatBtn from "@/components/FloatBtn.vue";
-import JsonEditor from "@/components/JsonEditor.vue";
+// import JsonEditor from "@/components/JsonEditor.vue";
+import JsonEditor2 from "@/components/JsonEditor2.vue";
 export default {
   data() {
     return {
@@ -112,7 +114,8 @@ export default {
   components: {
     InputField,
     FloatBtn,
-    JsonEditor,
+    // JsonEditor,
+    JsonEditor2,
   },
 
   methods: {
