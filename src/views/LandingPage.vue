@@ -3,8 +3,8 @@
     <div class="input-container">
       <div
         class="input-container-item"
-        @mouseover="showInputFloat = true"
-        @mouseout="showInputFloat = false"
+        @mouseenter="handleshowInputFloat"
+        @mouseleave="handleHideInputFloat"
       >
         <div class="input-container-item-tittle">
           <span class="field-name">Field Name</span>
@@ -19,15 +19,20 @@
         <FloatBtn
           :showFloat="showInputFloat"
           @addAnotherFieldToInputArray="addAnotherFieldToInputArray"
+          @mouseenter="handleshowInputFloat"
         />
       </div>
       <div
         class="input-container-item editor-container"
-        @mouseover="showEditorFloat = true"
-        @mouseout="showEditorFloat = false"
+        @mouseenter="handleshowEditorFloat"
+        @mouseleave="handleHideEditorFloat"
       >
         <!-- <JsonEditor /> -->
-        <FloatBtn :add_field="false" :showFloat="showEditorFloat" />
+        <FloatBtn
+          :add_field="false"
+          :showFloat="showEditorFloat"
+          @mouseenter="handleshowEditorFloat"
+        />
       </div>
     </div>
     <div class="output-container">
@@ -38,16 +43,20 @@
         <v-btn elevation="1" class="output-btn" @click="showJson = false"
           >API</v-btn
         >
-        <v-btn elevation="1" class="output-btn text-copy" v-if="showCopyBtn"
+        <v-btn
+          elevation="1"
+          class="output-btn text-copy"
+          v-if="showCopyBtn"
+          @mouseenter="handleShowCopyBtn"
           >Copy</v-btn
         >
       </div>
       <div
         class="output-container-editor"
-        @mouseover="showCopyBtn = true"
-        @mouseout="showCopyBtn = false"
+        @mouseenter="handleShowCopyBtn"
+        @mouseleave="handleHideCopyBtn"
       >
-        <!-- <JsonEditor v-if="showJson" /> -->
+        <JsonEditor v-if="showJson" />
       </div>
     </div>
   </section>
@@ -57,7 +66,7 @@
 import { v4 as uuidv4 } from "uuid";
 import InputField from "@/components/InputField.vue";
 import FloatBtn from "@/components/FloatBtn.vue";
-
+import JsonEditor from "@/components/JsonEditor.vue";
 export default {
   data() {
     return {
@@ -103,6 +112,7 @@ export default {
   components: {
     InputField,
     FloatBtn,
+    JsonEditor,
   },
 
   methods: {
@@ -115,8 +125,26 @@ export default {
 
       this.schemaObjectArray.push(schemaObject);
     },
+    handleshowInputFloat() {
+      this.showInputFloat = true;
+    },
+    handleHideInputFloat() {
+      this.showInputFloat = false;
+    },
     setUpdatedSchemaArray(data) {
       this.schemaObjectArray = data;
+    },
+    handleshowEditorFloat() {
+      this.showEditorFloat = true;
+    },
+    handleHideEditorFloat() {
+      this.showEditorFloat = false;
+    },
+    handleShowCopyBtn() {
+      this.showCopyBtn = true;
+    },
+    handleHideCopyBtn() {
+      this.showCopyBtn = false;
     },
   },
 };
@@ -219,7 +247,7 @@ export default {
   display: flex;
 
   border: 0.5rem solid $primary-whitsmoke;
-  margin-top: 0.5rem;
+  margin-top: 1.5rem;
   &-btn {
     flex: 0 0 4%;
     height: 100%;
@@ -263,18 +291,7 @@ export default {
   padding: 1rem !important;
   margin-bottom: 0.05rem;
 }
-// .output-btn {
-//   &:nth-child(1) {
-//     border-radius: 0 0 0.3rem 0 !important;
-//   }
-//   &:nth-child(2) {
-//     border-radius: 0 0 0.3rem 0.3rem !important;
-//   }
 
-//   &-copy {
-//     border-radius: 0 0 0 0.3rem !important;
-//   }
-// }
 .row-input-item
   > .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
   > .v-input__control
@@ -282,9 +299,4 @@ export default {
   box-shadow: none;
   border: 1px solid rgb(201, 200, 200) !important;
 }
-
-// .output-container .jse-menu .svelte-497ud4,
-// .output-container .jse-navigation-bar.svelte-15r3ahw.svelte-15r3ahw {
-//   display: none;
-// }
 </style>

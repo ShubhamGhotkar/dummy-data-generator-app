@@ -1,72 +1,74 @@
 <template>
-  <v-row justify="space-around">
-    <v-col cols="auto">
-      <v-dialog
-        transition="dialog-top-transition"
-        max-width="850"
-        max-height="1000"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            v-bind="attrs"
-            v-on="on"
-            style=""
-            :elevation="0"
-            class="dialogue-open-btn"
-            >{{ field_type }}</v-btn
-          >
-        </template>
-        <template v-slot:default="dialog">
-          <v-card>
-            <v-toolbar color="primary" dark>Opening from the top</v-toolbar>
-            <!--  -->
-            <v-card-actions
-              class="justify-end"
-              style="display: flex; justify-content: flex-end; padding: 0"
+  <section class="dialog-popup">
+    <v-row justify="space-around">
+      <v-col cols="auto">
+        <v-dialog
+          transition="dialog-top-transition"
+          max-width="850"
+          max-height="1000"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              v-bind="attrs"
+              v-on="on"
+              style=""
+              :elevation="0"
+              class="dialogue-open-btn"
+              >{{ field_type }}</v-btn
             >
-              <v-btn
-                text
-                @click="dialog.value = false"
-                class="dialogue-close-btn"
-                >X</v-btn
+          </template>
+          <template v-slot:default="dialog">
+            <v-card>
+              <v-toolbar color="primary" dark>Opening from the top</v-toolbar>
+              <!--  -->
+              <v-card-actions
+                class="justify-end"
+                style="display: flex; justify-content: flex-end; padding: 0"
               >
-            </v-card-actions>
-            <v-row
-              align="start"
-              align-content="start"
-              style="padding: 2rem"
-              @click="dialog.value = false"
-            >
-              <v-col v-for="num in 15" :key="num" style="cursor: pointer">
-                <v-card class="mx-auto" width="180" outlined :elevation="4">
-                  <v-list-item three-line>
-                    <v-list-item-content>
-                      <!-- <div class="text-overline mb-4">Tittle</div> -->
-                      <v-list-item-title class="text-h2 mb-1">
-                        Tittle
-                      </v-list-item-title>
-                      <v-list-item-subtitle v-for="num in 3" :key="num"
-                        >Example {{ num }}</v-list-item-subtitle
-                      >
-                    </v-list-item-content>
+                <v-btn
+                  text
+                  @click="dialog.value = false"
+                  class="dialogue-close-btn"
+                  >X</v-btn
+                >
+              </v-card-actions>
+              <v-row
+                align="start"
+                align-content="start"
+                style="padding: 2rem"
+                @click="dialog.value = false"
+              >
+                <v-col v-for="num in 15" :key="num" style="cursor: pointer">
+                  <v-card class="mx-auto" width="180" outlined :elevation="4">
+                    <v-list-item three-line>
+                      <v-list-item-content>
+                        <!-- <div class="text-overline mb-4">Tittle</div> -->
+                        <v-list-item-title class="text-h2 mb-1">
+                          Tittle
+                        </v-list-item-title>
+                        <v-list-item-subtitle v-for="num in 3" :key="num"
+                          >Example {{ num }}</v-list-item-subtitle
+                        >
+                      </v-list-item-content>
 
-                    <v-list-item-avatar
-                      tile
-                      size="40"
-                      color="grey"
-                    ></v-list-item-avatar>
-                  </v-list-item>
-                  <v-card-actions>
-                    <!-- <v-btn text> Select </v-btn> -->
-                  </v-card-actions>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-card>
-        </template>
-      </v-dialog>
-    </v-col>
-  </v-row>
+                      <v-list-item-avatar
+                        tile
+                        size="40"
+                        color="grey"
+                      ></v-list-item-avatar>
+                    </v-list-item>
+                    <v-card-actions>
+                      <!-- <v-btn text> Select </v-btn> -->
+                    </v-card-actions>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-card>
+          </template>
+        </v-dialog>
+      </v-col>
+    </v-row>
+  </section>
 </template>
 
 <script>
@@ -106,5 +108,14 @@ export default {
   position: absolute;
   top: 1rem;
   right: 1rem;
+}
+
+.v-sheet.v-card:not(.v-sheet--outlined) {
+  overflow: hidden;
+}
+.v-dialog:not(.v-dialog--fullscreen) {
+  max-height: 90%;
+
+  scroll-behavior: smooth;
 }
 </style>
