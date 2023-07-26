@@ -20,9 +20,25 @@
           <v-card>
             <v-toolbar color="primary" dark>Opening from the top</v-toolbar>
             <!--  -->
-            <v-row align="center" align-content="center" justify-lg>
-              <v-col v-for="num in 6" :key="num">
-                <v-card class="mx-auto" width="190" outlined :elevation="4">
+            <v-card-actions
+              class="justify-end"
+              style="display: flex; justify-content: flex-end; padding: 0"
+            >
+              <v-btn
+                text
+                @click="dialog.value = false"
+                class="dialogue-close-btn"
+                >X</v-btn
+              >
+            </v-card-actions>
+            <v-row
+              align="start"
+              align-content="start"
+              style="padding: 2rem"
+              @click="dialog.value = false"
+            >
+              <v-col v-for="num in 15" :key="num" style="cursor: pointer">
+                <v-card class="mx-auto" width="180" outlined :elevation="4">
                   <v-list-item three-line>
                     <v-list-item-content>
                       <!-- <div class="text-overline mb-4">Tittle</div> -->
@@ -41,17 +57,11 @@
                     ></v-list-item-avatar>
                   </v-list-item>
                   <v-card-actions>
-                    <v-btn outlined rounded text> Select </v-btn>
+                    <!-- <v-btn text> Select </v-btn> -->
                   </v-card-actions>
                 </v-card>
               </v-col>
             </v-row>
-            <!-- <v-card-text>
-              <div class="text-h2 pa-12">Hello world!</div>
-            </v-card-text> -->
-            <v-card-actions class="justify-end">
-              <v-btn text @click="dialog.value = false">Close</v-btn>
-            </v-card-actions>
           </v-card>
         </template>
       </v-dialog>
@@ -88,22 +98,13 @@ export default {
   color: $primary-black !important;
   border-radius: 0.2rem !important;
 }
+.dialogue-close-btn {
+  font-size: 1.2rem !important;
+  height: 2rem !important;
+  width: 2rem !important;
+  padding: 0.5rem 0 0 0;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
 </style>
-
-<!-- <style lang="scss">
-.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)
-  > .v-input__control
-  > .v-input__slot {
-  box-shadow: none !important;
-  border: 1px solid rgb(201, 200, 200) !important;
-  padding: 0.05rem 0 0.05rem 0.8rem !important;
-  margin-bottom: 0.5rem !important;
-}
-
-
-
-
-.v-btn:not(.v-btn--round).v-size--default{
-
-}
-</style> -->
