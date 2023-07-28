@@ -2,7 +2,7 @@
   <section class="homepage-container">
     <div class="input-container">
       <div
-        class="input-container-item"
+        class="input-container-item input-section"
         @mouseenter="handleshowInputFloat"
         @mouseleave="handleHideInputFloat"
       >
@@ -23,11 +23,10 @@
         />
       </div>
       <div
-        class="input-container-item editor-container"
+        class="input-container-item editor-section"
         @mouseenter="handleshowEditorFloat"
         @mouseleave="handleHideEditorFloat"
       >
-        <!-- <JsonEditor /> -->
         <JsonEditor2 />
         <FloatBtn
           :add_field="false"
@@ -57,7 +56,15 @@
         @mouseenter="handleShowCopyBtn"
         @mouseleave="handleHideCopyBtn"
       >
-        <JsonEditor2 v-if="showJson" />
+        <JsonEditor2
+          v-if="showJson"
+          :options="{
+            mode: 'text',
+            enableTransform: false,
+            enableSort: false,
+            repair: false,
+          }"
+        />
       </div>
     </div>
   </section>
@@ -67,7 +74,6 @@
 import { v4 as uuidv4 } from "uuid";
 import InputField from "@/components/InputField.vue";
 import FloatBtn from "@/components/FloatBtn.vue";
-// import JsonEditor from "@/components/JsonEditor.vue";
 import JsonEditor2 from "@/components/JsonEditor2.vue";
 export default {
   data() {
@@ -161,6 +167,7 @@ export default {
   height: 93vh;
   padding: 1rem 1.6rem 0 1.6rem;
   margin: 0 auto;
+  background: $landing-page-background-color;
 }
 .input-container {
   width: 100%;
@@ -177,8 +184,10 @@ export default {
     position: relative;
     justify-self: flex-start;
     padding: 1rem 0 0 0;
+    background: $primary-white;
 
-    box-shadow: 0 0 0.9rem rgb(218, 216, 216);
+    // box-shadow: 0 0 0.9rem rgb(218, 216, 216);
+    box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
     &-tittle {
       width: 100%;
       margin: 0 auto;
@@ -208,6 +217,25 @@ export default {
   }
 }
 
+.field-name {
+  padding-left: 1.5rem;
+}
+.field-type {
+  padding-left: 6rem;
+}
+.editor-section {
+  flex: 0 0 52%;
+  // padding: 0 0 0.04rem 0.04rem !important;
+  padding: 0 !important;
+  box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5) !important;
+  overflow: hidden;
+}
+
+.input-section {
+  flex: 0 0 40%;
+  padding: 1rem 3.2rem;
+  overflow: hidden;
+}
 // ROW INPUT
 .row-input {
   width: 100%;
@@ -249,7 +277,8 @@ export default {
   position: relative;
   display: flex;
 
-  border: 0.5rem solid $primary-whitsmoke;
+  // box-shadow: 0 0 0.9rem rgb(218, 216, 216);
+  box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
   margin-top: 1.5rem;
   &-btn {
     flex: 0 0 4%;
@@ -260,18 +289,7 @@ export default {
     height: 100%;
   }
 }
-.editor-container {
-  padding: 0.3rem;
-}
-.field-container {
-  padding: 0 5rem;
-}
-.field-name {
-  padding-left: 6.5rem;
-}
-.field-type {
-  padding-left: 6.5rem;
-}
+
 .text-copy {
   position: absolute;
   top: 0;

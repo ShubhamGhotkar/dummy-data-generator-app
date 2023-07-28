@@ -6,7 +6,9 @@
         @click="addAnotherFieldToInputArray"
         v-if="add_field"
       >
-        <span>+ Add Another Field</span>
+        <v-btn class="float-btn-container-add-another-field-btn">
+          +add Another Field
+        </v-btn>
       </div>
       <div class="float-btn-container-row">
         <div class="float-btn-item">
@@ -66,6 +68,7 @@ export default {
   position: absolute;
   bottom: 0;
   left: 0;
+  z-index: $top-index;
 
   display: flex;
   align-items: center;
@@ -75,30 +78,28 @@ export default {
   &-container {
     flex: 0 0 50%;
     margin-left: 0.5rem;
+
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.7rem;
     &-add-another-field {
-      width: max-content;
-      cursor: pointer;
-      background: $primary-white !important;
-      & span {
-        text-transform: uppercase;
-        letter-spacing: 0.03rem;
-        font-size: inherit;
-        font-weight: 500;
+      width: 50%;
+      height: 2rem;
+      &-btn {
+        height: 100%;
+        width: 100%;
+        background-color: $primary-white !important;
+        height: 1.8rem !important;
+        color: $cerulean-color !important;
+        box-shadow: none;
+        margin-right: 2rem !important;
+        border-radius: 0.2rem !important;
         border: 1px solid $primary-border !important;
-        background: $primary-white;
-        color: $primary-gray;
-        padding: 0.4rem 0.3rem;
-        border-radius: 0.2rem;
-        &:hover {
-          background: $primary-whitsmoke;
-        }
       }
     }
     &-row {
-      width: max-content;
+      width: 40%;
+
       margin-top: 0.3rem;
       font-size: inherit !important;
     }
@@ -120,21 +121,18 @@ export default {
   }
 
   &-generate-btn {
-    //
-    flex: 0 0 50%;
+    width: 60%;
     height: 2rem;
-    // background: $primary-white;
 
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    // margin-right: 5rem;
     &-btn {
       background-color: $primary-white !important;
       height: 1.8rem !important;
       color: $cerulean-color !important;
       box-shadow: none;
-      margin-right: 2rem !important;
+      margin-right: 0.7rem !important;
       border-radius: 0.2rem !important;
       border: 1px solid $primary-border !important;
     }
