@@ -313,7 +313,7 @@ export default {
 .text-copy {
   position: absolute;
   top: 0;
-  right: 0;
+  right: -0.2rem;
   z-index: 999;
 }
 </style>
