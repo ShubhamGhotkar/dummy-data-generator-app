@@ -27,7 +27,7 @@
         @mouseenter="handleshowEditorFloat"
         @mouseleave="handleHideEditorFloat"
       >
-        <JsonEditor2 />
+        <JsonEditor />
         <FloatBtn
           :add_field="false"
           :showFloat="showEditorFloat"
@@ -56,15 +56,22 @@
         @mouseenter="handleShowCopyBtn"
         @mouseleave="handleHideCopyBtn"
       >
-        <JsonEditor2
+        <div
+          class="output-container-editor-Json"
+          @mouseenter="handleShowCopyBtn"
           v-if="showJson"
-          :options="{
-            mode: 'text',
-            enableTransform: false,
-            enableSort: false,
-            repair: false,
-          }"
-        />
+        >
+          <JsonEditor
+            :options="{
+              mode: 'text',
+              enableTransform: false,
+              enableSort: false,
+              repair: false,
+            }"
+            jsonData="output will show here"
+          />
+        </div>
+        <div class="output-container-editor-Api" v-else></div>
       </div>
     </div>
   </section>
@@ -74,7 +81,7 @@
 import { v4 as uuidv4 } from "uuid";
 import InputField from "@/components/InputField.vue";
 import FloatBtn from "@/components/FloatBtn.vue";
-import JsonEditor2 from "@/components/JsonEditor2.vue";
+import JsonEditor from "@/components/JsonEditor.vue";
 export default {
   data() {
     return {
@@ -120,8 +127,8 @@ export default {
   components: {
     InputField,
     FloatBtn,
-    // JsonEditor,
-    JsonEditor2,
+
+    JsonEditor,
   },
 
   methods: {
@@ -276,6 +283,8 @@ export default {
 
   position: relative;
   display: flex;
+  align-items: center;
+  gap: 0.3rem;
 
   // box-shadow: 0 0 0.9rem rgb(218, 216, 216);
   box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
@@ -287,6 +296,17 @@ export default {
   &-editor {
     flex: 0 0 93%;
     height: 100%;
+    border-left: 0.1rem solid $primary-border;
+
+    &-Json {
+      width: 100%;
+      height: 100%;
+    }
+    &-Api {
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 0, 0.267);
+    }
   }
 }
 
