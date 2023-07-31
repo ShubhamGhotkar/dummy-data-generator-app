@@ -21,12 +21,15 @@
             placeholder="No of Rows"
             class="float-btn-item-text-field"
             type="Number"
+            :min="1"
           ></v-text-field>
         </div>
       </div>
     </div>
     <div class="float-btn-generate-btn">
-      <v-btn class="float-btn-generate-btn-btn"> generate data </v-btn>
+      <v-btn class="float-btn-generate-btn-btn" @click="generateData">
+        generate data
+      </v-btn>
     </div>
   </div>
 </template>
@@ -51,6 +54,9 @@ export default {
   methods: {
     addAnotherFieldToInputArray() {
       this.$emit("addAnotherFieldToInputArray");
+    },
+    generateData() {
+      this.$emit("generateData");
     },
   },
 };

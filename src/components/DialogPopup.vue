@@ -38,7 +38,7 @@
                   :key="fakerData.data_type"
                 >
                   <v-card
-                    class="mx-auto"
+                    class="mx-auto hover"
                     width="250"
                     outlined
                     :elevation="4"
@@ -56,11 +56,11 @@
                         >
                       </v-list-item-content>
 
-                      <v-list-item-avatar
+                      <!-- <v-list-item-avatar
                         tile
                         size="40"
                         color="grey"
-                      ></v-list-item-avatar>
+                      ></v-list-item-avatar> -->
                     </v-list-item>
                     <v-card-actions>
                       <!-- <v-btn text> Select </v-btn> -->
@@ -157,6 +157,14 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.hover {
+  &:hover {
+    background: rgba(0, 0, 0, 0.099);
+  }
+}
+</style>
 
 <style lang="scss">
 @import "../sass/style.scss";

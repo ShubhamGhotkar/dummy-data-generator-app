@@ -84,7 +84,6 @@ export default {
         return schemaObject;
       });
 
-      console.log(updateDataTypeArray);
       this.schemaObjectArray = updateDataTypeArray;
     },
   },
