@@ -16,7 +16,11 @@
       </div>
 
       <div class="input-field-container-input-type">
-        <DialogPopup :field_type="input.schemaType" />
+        <DialogPopup
+          :field_type="input.schemaType"
+          :id="input.id"
+          @selectDataType="setDataTypeToInputField"
+        />
       </div>
       <div class="input-field-container-cancle-btn">
         <svg
@@ -71,6 +75,17 @@ export default {
         (field) => field.id !== id
       );
       this.$emit("updateSchemaArray", this.schemaObjectArray);
+    },
+    setDataTypeToInputField(dataType, id) {
+      let updateDataTypeArray = this.schemaObjectArray.map((schemaObject) => {
+        if (schemaObject.id === id) {
+          schemaObject.schemaType = dataType;
+        }
+        return schemaObject;
+      });
+
+      console.log(updateDataTypeArray);
+      this.schemaObjectArray = updateDataTypeArray;
     },
   },
 };
