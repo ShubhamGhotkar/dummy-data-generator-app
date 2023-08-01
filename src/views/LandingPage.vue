@@ -7,7 +7,7 @@
         @mouseleave="handleHideInputFloat"
       >
         <div class="input-container-item-tittle">
-          <span class="field-name">Field Name</span>
+          <span class="field-person">Field Name</span>
           <span class="field-type">Type</span>
         </div>
         <div class="input-container-item-input-field field-container">
@@ -85,7 +85,9 @@ import InputField from "@/components/InputField.vue";
 import FloatBtn from "@/components/FloatBtn.vue";
 import JsonEditor from "@/components/JsonEditor.vue";
 import { faker } from "@faker-js/faker";
-// import { fakerGenerateEntry } from "../data/data";
+// import {faker} from "faker";
+
+// import { fakerDataExamples } from "../data/data";
 export default {
   data() {
     return {
@@ -97,12 +99,12 @@ export default {
         },
         {
           id: uuidv4(),
-          schemaKey: "first_name",
+          schemaKey: "first_person",
           schemaType: "String",
         },
         {
           id: uuidv4(),
-          schemaKey: "last_name",
+          schemaKey: "last_person",
           schemaType: "String",
         },
 
@@ -137,21 +139,21 @@ export default {
   },
   created() {
     const fakerGenerateEntry = [
-      { data_type: "Name (Full Name)", example: faker.name.findName() },
-      { data_type: "Name (First Name)", example: faker.name.firstName() },
-      { data_type: "Name (Last Name)", example: faker.name.lastName() },
-      { data_type: "Address", example: faker.address.streetAddress() },
-      { data_type: "Address (City)", example: faker.address.city() },
-      { data_type: "Address (State)", example: faker.address.state() },
-      { data_type: "Address (Country)", example: faker.address.country() },
-      { data_type: "Address (Zip Code)", example: faker.address.zipCode() },
+      { data_type: "Name (Full Name)", example: faker.person.findName() },
+      { data_type: "Name (First Name)", example: faker.person.firstName() },
+      { data_type: "Name (Last Name)", example: faker.person.lastName() },
+      { data_type: "Address", example: faker.location.streetAddress() },
+      { data_type: "Address (City)", example: faker.location.city() },
+      { data_type: "Address (State)", example: faker.location.state() },
+      { data_type: "Address (Country)", example: faker.location.country() },
+      { data_type: "Address (Zip Code)", example: faker.location.zipCode() },
       { data_type: "Email", example: faker.internet.email() },
       { data_type: "Phone Number", example: faker.phone.phoneNumberFormat() },
       {
         data_type: "Date of Birth",
         example: faker.date.past().toISOString().split("T")[0],
       },
-      { data_type: "Job", example: faker.name.jobTitle() },
+      { data_type: "Job", example: faker.person.jobTitle() },
       { data_type: "Company", example: faker.company.companyName() },
       { data_type: "Text", example: faker.lorem.paragraph() },
       {
@@ -163,20 +165,12 @@ export default {
         example: faker.finance.creditCardExpirationDate(),
       },
       { data_type: "Color Name", example: faker.commerce.color() },
-      { data_type: "Latitude", example: faker.address.latitude() },
-      { data_type: "Longitude", example: faker.address.longitude() },
-      { data_type: "Random Number", example: faker.random.number() },
-      { data_type: "Random Float Number", example: faker.random.float() },
-      {
-        data_type: "Random Array Element",
-        example: faker.random.arrayElement(["apple", "orange", "banana"]),
-      },
-      { data_type: "Boolean", example: faker.random.boolean() },
+      { data_type: "Latitude", example: faker.location.latitude() },
+      { data_type: "Longitude", example: faker.location.longitude() },
       { data_type: "Word", example: faker.lorem.word() },
       { data_type: "Words", example: faker.lorem.words() },
-      { data_type: "UUID", example: faker.random.uuid() },
       { data_type: "File Path", example: faker.system.filePath() },
-      { data_type: "Image URL", example: faker.image.imageUrl() },
+      { data_type: "Image URL", example: faker.image.url() },
       { data_type: "Avatar Image URL", example: faker.image.avatar() },
       { data_type: "Domain Name", example: faker.internet.domainName() },
       { data_type: "URL", example: faker.internet.url() },
@@ -185,39 +179,15 @@ export default {
         data_type: "User Agent",
         example: faker.internet.userAgent(),
       },
-      { data_type: "ISBN-10", example: faker.random.isbn10() },
-      { data_type: "ISBN-13", example: faker.random.isbn13() },
-      { data_type: "Language Code", example: faker.random.locale() },
       { data_type: "Currency Code", example: faker.finance.currencyCode() },
       { data_type: "File Extension", example: faker.system.fileExt() },
       { data_type: "MIME Type", example: faker.system.mimeType() },
-      { data_type: "Emoji", example: faker.random.emoji() },
       { data_type: "Password", example: faker.internet.password() },
       { data_type: "Airline", example: faker.company.companyName() },
       { data_type: "Aircraft Type", example: faker.system.commonFileName() },
       {
-        data_type: "Airplane",
-        example: faker.random.alphaNumeric(6).toUpperCase(),
-      },
-      {
         data_type: "Airport",
-        example: faker.address.city() + " International Airport",
-      },
-      {
-        data_type: "Flight Number",
-        example:
-          faker.random.alphaNumeric(2).toUpperCase() +
-          faker.random.number({ min: 100, max: 999 }),
-      },
-      {
-        data_type: "Record Locator",
-        example: faker.random.alphaNumeric(6).toUpperCase(),
-      },
-      {
-        data_type: "Seat",
-        example:
-          faker.random.number({ min: 1, max: 50 }) +
-          faker.random.arrayElement(["A", "B", "C", "D", "E", "F"]),
+        example: faker.location.city() + " International Airport",
       },
       { data_type: "Department", example: faker.commerce.department() },
       { data_type: "Price", example: faker.commerce.price() },
@@ -243,7 +213,6 @@ export default {
       },
       { data_type: "Common File Name", example: faker.system.commonFileName() },
       { data_type: "Common File Type", example: faker.system.commonFileType() },
-      { data_type: "Cron Expression", example: faker.random.cron() },
       { data_type: "Directory Path", example: faker.system.directoryPath() },
       { data_type: "File Extension", example: faker.system.fileExt() },
       { data_type: "File Name", example: faker.system.fileName() },
@@ -272,44 +241,44 @@ export default {
         example: faker.vehicle.vrm(),
       },
       // Word
-      { data_type: "Adjective", example: faker.random.word() },
-      { data_type: "Adverb", example: faker.random.word() },
-      { data_type: "Conjunction", example: faker.random.word() },
-      { data_type: "Interjection", example: faker.random.word() },
-      { data_type: "Noun", example: faker.random.word() },
-      { data_type: "Preposition", example: faker.random.word() },
-      { data_type: "Sample Word", example: faker.random.word() },
-      { data_type: "Verb", example: faker.random.word() },
-      { data_type: "Words", example: faker.random.words() },
+      { data_type: "Adjective", example: faker.word.adjective() },
+      { data_type: "Adverb", example: faker.word.adverb() },
+      { data_type: "Conjunction", example: faker.word.conjunction() },
+      { data_type: "Interjection", example: faker.word.interjection },
+      { data_type: "Noun", example: faker.word.noun() },
+      { data_type: "Preposition", example: faker.word.preposition() },
+      { data_type: "Sample Word", example: faker.word.sample() },
+      { data_type: "Verb", example: faker.word.verb() },
+      { data_type: "Words", example: faker.word.words() },
       // Location
-      { data_type: "Building Number", example: faker.address.buildingNumber() },
-      { data_type: "Cardinal Direction", example: faker.address.direction() },
-      { data_type: "City", example: faker.address.city() },
-      { data_type: "City Name", example: faker.address.cityName() },
-      { data_type: "Country", example: faker.address.country() },
-      { data_type: "Country Code", example: faker.address.countryCode() },
-      { data_type: "County", example: faker.address.county() },
-      { data_type: "Direction", example: faker.address.direction() },
-      { data_type: "Latitude", example: faker.address.latitude() },
-      { data_type: "Longitude", example: faker.address.longitude() },
+      {
+        data_type: "Building Number",
+        example: faker.location.buildingNumber(),
+      },
+      { data_type: "Cardinal Direction", example: faker.location.direction() },
+      { data_type: "City", example: faker.location.city() },
+      { data_type: "Country", example: faker.location.country() },
+      { data_type: "Country Code", example: faker.location.countryCode() },
+      { data_type: "County", example: faker.location.county() },
+      { data_type: "Direction", example: faker.location.direction() },
+      { data_type: "Latitude", example: faker.location.latitude() },
+      { data_type: "Longitude", example: faker.location.longitude() },
       {
         data_type: "Nearby GPS Coordinate",
-        example: faker.address.nearbyGPSCoordinate(),
+        example: faker.location.nearbyGPSCoordinate(),
       },
       {
         data_type: "Ordinal Direction",
-        example: faker.address.ordinalDirection(),
+        example: faker.location.ordinalDirection(),
       },
       {
         data_type: "Secondary Address",
-        example: faker.address.secondaryAddress(),
+        example: faker.location.secondaryAddress(),
       },
-      { data_type: "State", example: faker.address.state() },
-      { data_type: "State Abbreviation", example: faker.address.stateAbbr() },
-      { data_type: "Street", example: faker.address.streetName() },
-      { data_type: "Street Address", example: faker.address.streetAddress() },
-      { data_type: "Time Zone", example: faker.address.timeZone() },
-      { data_type: "Zip Code", example: faker.address.zipCode() },
+      { data_type: "State", example: faker.location.state() },
+      { data_type: "Street Address", example: faker.location.streetAddress() },
+      { data_type: "Time Zone", example: faker.location.timeZone() },
+      { data_type: "Zip Code", example: faker.location.zipCode() },
       // Date
       { data_type: "Any Time", example: faker.date.past().toISOString() },
       {
@@ -332,7 +301,6 @@ export default {
       { data_type: "Soon Date", example: faker.date.soon().toISOString() },
       { data_type: "Weekday", example: faker.date.weekday() },
       // Finance
-      { data_type: "Account", example: faker.finance.account() },
       { data_type: "Account Name", example: faker.finance.accountName() },
       { data_type: "Account Number", example: faker.finance.accountNumber() },
       { data_type: "Amount", example: faker.finance.amount() },
@@ -363,8 +331,6 @@ export default {
         data_type: "Litecoin Address",
         example: faker.finance.litecoinAddress(),
       },
-      { data_type: "Mask", example: faker.random.mask() },
-      { data_type: "Masked Number", example: faker.random.mask() },
       { data_type: "PIN", example: faker.finance.pin() },
       { data_type: "Routing Number", example: faker.finance.routingNumber() },
       {
@@ -389,26 +355,6 @@ export default {
       { data_type: "Genre", example: faker.music.genre() },
       { data_type: "Song Name", example: faker.music.songName() },
       // Random
-      { data_type: "Alpha", example: faker.random.alpha() },
-      { data_type: "Alphanumeric", example: faker.random.alphaNumeric() },
-      { data_type: "Binary", example: faker.random.binary() },
-      {
-        data_type: "From Characters",
-        example: faker.random.alphaNumeric(10, "ABCD"),
-      },
-      { data_type: "Hexadecimal", example: faker.random.hexaDecimal() },
-      { data_type: "NanoID", example: faker.random.uuid() }, // Using UUID as NanoID is not natively supported by Faker.js
-      { data_type: "Numeric", example: faker.random.number() },
-      { data_type: "Octal", example: faker.random.octal() },
-      {
-        data_type: "Sample",
-        example: faker.random.arrayElement(["apple", "orange", "banana"]),
-      },
-      {
-        data_type: "Symbol",
-        example: faker.random.alphaNumeric(1, "!@#$%^&*()[]{}<>?/|"),
-      },
-      { data_type: "UUID", example: faker.random.uuid() },
     ];
     this.fakerKeyArray = fakerGenerateEntry;
   },
@@ -444,6 +390,8 @@ export default {
       this.showCopyBtn = false;
     },
     generateDataFromInputField() {
+      // let a = faker.person.firstName();
+      // window.alert(a);
       // let generateDataFromUserSchema = this.schemaObjectArray.map(
       //   (schemaObject) => {
       //     schemaObject.schemaType =
@@ -453,6 +401,7 @@ export default {
       //   }
       // );
       // console.log(generateDataFromUserSchema);
+      // this.fakerKeyArray.map((val) => console.log(val));
     },
     generateDataFromJsonField() {
       // window.alert("Json");
@@ -519,7 +468,7 @@ export default {
   }
 }
 
-.field-name {
+.field-person {
   padding-left: 1.5rem;
 }
 .field-type {

@@ -11,21 +11,21 @@ export default {
     options: {
       typr: Object,
       require: true,
-      default: {
-        mode: "code",
-        enableSort: false,
-        enableTransform: false,
+      default: () => {
+        return { mode: "code", enableSort: false, enableTransform: false };
       },
     },
     jsonData: {
       typr: Object,
-      require: true,
-      default: {
-        _id: "ID",
-        first_name: "String",
-        last_name: "String",
-        age: "Number",
-        image: "url",
+      require: false,
+      default: () => {
+        return {
+          _id: "ID",
+          first_name: "String",
+          last_name: "String",
+          age: "Number",
+          image: "url",
+        };
       },
     },
   },

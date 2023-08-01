@@ -1,6 +1,3 @@
-// import { faker } from "@faker-js/faker";
-// import faker from "faker";
-
 export let fakerDataExamples = [
   { data_type: "Name (Full Name)", example: "John Doe" },
   { data_type: "Name (First Name)", example: "John" },
