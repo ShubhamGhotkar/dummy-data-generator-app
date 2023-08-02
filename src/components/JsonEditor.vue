@@ -17,20 +17,23 @@ export default {
     },
     jsonData: {
       typr: Object,
-      require: false,
-      default: () => {
-        return {
-          _id: "ID",
-          first_name: "String",
-          last_name: "String",
-          age: "Number",
-          image: "url",
-        };
-      },
+      require: true,
     },
+  },
+  data() {
+    return {
+      jsonEditorData: {},
+      jsonEditorOptions: {},
+    };
+  },
+  created() {
+    this.jsonEditorData = this.jsonData;
+    this.jsonEditorOptions = this.options;
   },
   mounted() {
     this.initJSONEditor();
+    this.jsonEditorData = this.jsonData;
+    this.jsonEditorOptions = this.options;
   },
   beforeDestroy() {
     if (this.editor) {
@@ -41,8 +44,8 @@ export default {
   methods: {
     initJSONEditor() {
       const container = this.$refs.jsonEditorContainer;
-      this.editor = new JSONEditor(container, this.options);
-      this.editor.set(this.jsonData);
+      this.editor = new JSONEditor(container, this.jsonEditorOptions);
+      this.editor.set(this.jsonEditorData);
     },
   },
 };

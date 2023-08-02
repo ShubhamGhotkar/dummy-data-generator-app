@@ -70,7 +70,7 @@
               enableSort: false,
               repair: false,
             }"
-            jsonData="output will show here"
+            :jsonData="outputJsonData"
           />
         </div>
         <div class="output-container-editor-Api" v-else></div>
@@ -84,51 +84,50 @@ import { v4 as uuidv4 } from "uuid";
 import InputField from "@/components/InputField.vue";
 import FloatBtn from "@/components/FloatBtn.vue";
 import JsonEditor from "@/components/JsonEditor.vue";
-import { faker } from "@faker-js/faker";
+// import { faker } from "@faker-js/faker";
 // import {faker} from "faker";
 
 // import { fakerDataExamples } from "../data/data";
+import { fakerGenerateEntry } from "../data/fakerData";
 export default {
+  computed: {},
   data() {
     return {
       schemaObjectArray: [
         {
           id: uuidv4(),
           schemaKey: "_id",
-          schemaType: "Number",
+          schemaType: "Building Number",
         },
         {
           id: uuidv4(),
           schemaKey: "first_person",
-          schemaType: "String",
+          schemaType: "Name (First Name)",
         },
         {
           id: uuidv4(),
           schemaKey: "last_person",
-          schemaType: "String",
+          schemaType: "Name (Last Name)",
         },
 
         {
           id: uuidv4(),
-          schemaKey: "age",
-          schemaType: "Number",
+          schemaKey: "Full Name",
+          schemaType: "Name (Full Name)",
         },
         {
           id: uuidv4(),
           schemaKey: "Image",
-          schemaType: "URL",
+          schemaType: "Image URL",
         },
-        // {
-        //   id: uuidv4(),
-        //   schemaKey: "gender",
-        //   schemaType: "String",
-        // },
       ],
       fakerKeyArray: [],
       showJson: true,
       showCopyBtn: false,
       showInputFloat: false,
       showEditorFloat: false,
+      outputJsonData: "output will show here",
+      addFieldCount: 1,
     };
   },
   components: {
@@ -137,233 +136,15 @@ export default {
 
     JsonEditor,
   },
-  created() {
-    const fakerGenerateEntry = [
-      { data_type: "Name (Full Name)", example: faker.person.findName() },
-      { data_type: "Name (First Name)", example: faker.person.firstName() },
-      { data_type: "Name (Last Name)", example: faker.person.lastName() },
-      { data_type: "Address", example: faker.location.streetAddress() },
-      { data_type: "Address (City)", example: faker.location.city() },
-      { data_type: "Address (State)", example: faker.location.state() },
-      { data_type: "Address (Country)", example: faker.location.country() },
-      { data_type: "Address (Zip Code)", example: faker.location.zipCode() },
-      { data_type: "Email", example: faker.internet.email() },
-      { data_type: "Phone Number", example: faker.phone.phoneNumberFormat() },
-      {
-        data_type: "Date of Birth",
-        example: faker.date.past().toISOString().split("T")[0],
-      },
-      { data_type: "Job", example: faker.person.jobTitle() },
-      { data_type: "Company", example: faker.company.companyName() },
-      { data_type: "Text", example: faker.lorem.paragraph() },
-      {
-        data_type: "Credit Card Number",
-        example: faker.finance.creditCardNumber(),
-      },
-      {
-        data_type: "Credit Card Expiration",
-        example: faker.finance.creditCardExpirationDate(),
-      },
-      { data_type: "Color Name", example: faker.commerce.color() },
-      { data_type: "Latitude", example: faker.location.latitude() },
-      { data_type: "Longitude", example: faker.location.longitude() },
-      { data_type: "Word", example: faker.lorem.word() },
-      { data_type: "Words", example: faker.lorem.words() },
-      { data_type: "File Path", example: faker.system.filePath() },
-      { data_type: "Image URL", example: faker.image.url() },
-      { data_type: "Avatar Image URL", example: faker.image.avatar() },
-      { data_type: "Domain Name", example: faker.internet.domainName() },
-      { data_type: "URL", example: faker.internet.url() },
-      { data_type: "IPv4 Address", example: faker.internet.ip() },
-      {
-        data_type: "User Agent",
-        example: faker.internet.userAgent(),
-      },
-      { data_type: "Currency Code", example: faker.finance.currencyCode() },
-      { data_type: "File Extension", example: faker.system.fileExt() },
-      { data_type: "MIME Type", example: faker.system.mimeType() },
-      { data_type: "Password", example: faker.internet.password() },
-      { data_type: "Airline", example: faker.company.companyName() },
-      { data_type: "Aircraft Type", example: faker.system.commonFileName() },
-      {
-        data_type: "Airport",
-        example: faker.location.city() + " International Airport",
-      },
-      { data_type: "Department", example: faker.commerce.department() },
-      { data_type: "Price", example: faker.commerce.price() },
-      { data_type: "Product", example: faker.commerce.product() },
-      {
-        data_type: "Product Adjective",
-        example: faker.commerce.productAdjective(),
-      },
-      {
-        data_type: "Product Description",
-        example: faker.commerce.productDescription(),
-      },
-      {
-        data_type: "Product Material",
-        example: faker.commerce.productMaterial(),
-      },
-      { data_type: "Product Name", example: faker.commerce.productName() },
-
-      // System
-      {
-        data_type: "Common File Extension",
-        example: faker.system.commonFileExt(),
-      },
-      { data_type: "Common File Name", example: faker.system.commonFileName() },
-      { data_type: "Common File Type", example: faker.system.commonFileType() },
-      { data_type: "Directory Path", example: faker.system.directoryPath() },
-      { data_type: "File Extension", example: faker.system.fileExt() },
-      { data_type: "File Name", example: faker.system.fileName() },
-      { data_type: "File Path", example: faker.system.filePath() },
-      { data_type: "File Type", example: faker.system.fileType() },
-      { data_type: "MIME Type", example: faker.system.mimeType() },
-      {
-        data_type: "Network Interface",
-        example: faker.system.networkInterface(),
-      },
-      { data_type: "Semantic Version", example: faker.system.semver() },
-      // Vehicle
-      { data_type: "Bicycle", example: faker.vehicle.bicycle() },
-      { data_type: "Color", example: faker.vehicle.color() },
-      { data_type: "Fuel", example: faker.vehicle.fuel() },
-      { data_type: "Manufacturer", example: faker.vehicle.manufacturer() },
-      { data_type: "Model", example: faker.vehicle.model() },
-      { data_type: "Type", example: faker.vehicle.type() },
-      { data_type: "Vehicle", example: faker.vehicle.vehicle() },
-      {
-        data_type: "VIN (Vehicle Identification Number)",
-        example: faker.vehicle.vin(),
-      },
-      {
-        data_type: "VRM (Vehicle Registration Mark)",
-        example: faker.vehicle.vrm(),
-      },
-      // Word
-      { data_type: "Adjective", example: faker.word.adjective() },
-      { data_type: "Adverb", example: faker.word.adverb() },
-      { data_type: "Conjunction", example: faker.word.conjunction() },
-      { data_type: "Interjection", example: faker.word.interjection },
-      { data_type: "Noun", example: faker.word.noun() },
-      { data_type: "Preposition", example: faker.word.preposition() },
-      { data_type: "Sample Word", example: faker.word.sample() },
-      { data_type: "Verb", example: faker.word.verb() },
-      { data_type: "Words", example: faker.word.words() },
-      // Location
-      {
-        data_type: "Building Number",
-        example: faker.location.buildingNumber(),
-      },
-      { data_type: "Cardinal Direction", example: faker.location.direction() },
-      { data_type: "City", example: faker.location.city() },
-      { data_type: "Country", example: faker.location.country() },
-      { data_type: "Country Code", example: faker.location.countryCode() },
-      { data_type: "County", example: faker.location.county() },
-      { data_type: "Direction", example: faker.location.direction() },
-      { data_type: "Latitude", example: faker.location.latitude() },
-      { data_type: "Longitude", example: faker.location.longitude() },
-      {
-        data_type: "Nearby GPS Coordinate",
-        example: faker.location.nearbyGPSCoordinate(),
-      },
-      {
-        data_type: "Ordinal Direction",
-        example: faker.location.ordinalDirection(),
-      },
-      {
-        data_type: "Secondary Address",
-        example: faker.location.secondaryAddress(),
-      },
-      { data_type: "State", example: faker.location.state() },
-      { data_type: "Street Address", example: faker.location.streetAddress() },
-      { data_type: "Time Zone", example: faker.location.timeZone() },
-      { data_type: "Zip Code", example: faker.location.zipCode() },
-      // Date
-      { data_type: "Any Time", example: faker.date.past().toISOString() },
-      {
-        data_type: "Between",
-        example: `${faker.date.past().toISOString()} and ${faker.date
-          .future()
-          .toISOString()}`,
-      },
-      {
-        data_type: "Between Dates",
-        example: `${faker.date.past().toISOString()} and ${faker.date
-          .future()
-          .toISOString()}`,
-      },
-      { data_type: "Birthdate", example: faker.date.past().toISOString() },
-      { data_type: "Future Date", example: faker.date.future().toISOString() },
-      { data_type: "Month", example: faker.date.month() },
-      { data_type: "Past Date", example: faker.date.past().toISOString() },
-      { data_type: "Recent Date", example: faker.date.recent().toISOString() },
-      { data_type: "Soon Date", example: faker.date.soon().toISOString() },
-      { data_type: "Weekday", example: faker.date.weekday() },
-      // Finance
-      { data_type: "Account Name", example: faker.finance.accountName() },
-      { data_type: "Account Number", example: faker.finance.accountNumber() },
-      { data_type: "Amount", example: faker.finance.amount() },
-      { data_type: "BIC (Bank Identifier Code)", example: faker.finance.bic() },
-      { data_type: "Bitcoin Address", example: faker.finance.bitcoinAddress() },
-      { data_type: "Credit Card CVV", example: faker.finance.creditCardCVV() },
-      {
-        data_type: "Credit Card Issuer",
-        example: faker.finance.creditCardIssuer(),
-      },
-      {
-        data_type: "Credit Card Number",
-        example: faker.finance.creditCardNumber(),
-      },
-      { data_type: "Currency", example: faker.finance.currency() },
-      { data_type: "Currency Code", example: faker.finance.currencyCode() },
-      { data_type: "Currency Name", example: faker.finance.currencyName() },
-      { data_type: "Currency Symbol", example: faker.finance.currencySymbol() },
-      {
-        data_type: "Ethereum Address",
-        example: faker.finance.ethereumAddress(),
-      },
-      {
-        data_type: "IBAN (International Bank Account Number)",
-        example: faker.finance.iban(),
-      },
-      {
-        data_type: "Litecoin Address",
-        example: faker.finance.litecoinAddress(),
-      },
-      { data_type: "PIN", example: faker.finance.pin() },
-      { data_type: "Routing Number", example: faker.finance.routingNumber() },
-      {
-        data_type: "Transaction Description",
-        example: faker.finance.transactionDescription(),
-      },
-      {
-        data_type: "Transaction Type",
-        example: faker.finance.transactionType(),
-      },
-      // Lorem
-      { data_type: "Lines", example: faker.lorem.lines() },
-      { data_type: "Paragraph", example: faker.lorem.paragraph() },
-      { data_type: "Paragraphs", example: faker.lorem.paragraphs() },
-      { data_type: "Sentence", example: faker.lorem.sentence() },
-      { data_type: "Sentences", example: faker.lorem.sentences() },
-      { data_type: "Slug", example: faker.lorem.slug() },
-      { data_type: "Text", example: faker.lorem.text() },
-      { data_type: "Word", example: faker.lorem.word() },
-      { data_type: "Words", example: faker.lorem.words() },
-      // Music
-      { data_type: "Genre", example: faker.music.genre() },
-      { data_type: "Song Name", example: faker.music.songName() },
-      // Random
-    ];
+  mounted() {
     this.fakerKeyArray = fakerGenerateEntry;
   },
   methods: {
     addAnotherFieldToInputArray() {
       let schemaObject = {
         id: uuidv4(),
-        schemaKey: "gender",
-        schemaType: "String",
+        schemaKey: `add_field_${this.addFieldCount++}`,
+        schemaType: "Text",
       };
 
       this.schemaObjectArray.push(schemaObject);
@@ -390,18 +171,17 @@ export default {
       this.showCopyBtn = false;
     },
     generateDataFromInputField() {
-      // let a = faker.person.firstName();
-      // window.alert(a);
-      // let generateDataFromUserSchema = this.schemaObjectArray.map(
-      //   (schemaObject) => {
-      //     schemaObject.schemaType =
-      //       this.fakerKeyArray[schemaObject.schemaType].example;
-      //     console.log(schemaObject.schemaType);
-      //     return schemaObject;
-      //   }
-      // );
-      // console.log(generateDataFromUserSchema);
-      // this.fakerKeyArray.map((val) => console.log(val));
+      let outputObject = {};
+
+      for (let schema of this.schemaObjectArray) {
+        let acessKey = this.fakerKeyArray.find(
+          (fakerKey) => fakerKey.data_type === schema.schemaType
+        );
+        if (acessKey) {
+          outputObject[schema.schemaKey] = acessKey.example();
+        }
+      }
+      this.outputJsonData = outputObject;
     },
     generateDataFromJsonField() {
       // window.alert("Json");

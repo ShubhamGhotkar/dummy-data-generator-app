@@ -67,7 +67,7 @@ export default {
     };
   },
   updated() {
-    console.log(this.schemaObjectArray);
+    // console.log(this.schemaObjectArray);
   },
   methods: {
     deleteSchemaObject(id) {
