@@ -236,6 +236,7 @@ export default {
       height: 90%;
       overflow-y: scroll;
       scroll-behavior: smooth;
+
       &::-webkit-scrollbar {
         width: 1rem;
       }

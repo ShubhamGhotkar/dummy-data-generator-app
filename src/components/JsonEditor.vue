@@ -9,15 +9,15 @@ import "jsoneditor/dist/jsoneditor.min.css";
 export default {
   props: {
     options: {
-      typr: Object,
-      require: true,
+      type: Object,
+      required: true,
       default: () => {
         return { mode: "code", enableSort: false, enableTransform: false };
       },
     },
     jsonData: {
-      typr: Object,
-      require: true,
+      type: Object,
+      required: true,
     },
   },
   data() {
@@ -25,6 +25,12 @@ export default {
       jsonEditorData: {},
       jsonEditorOptions: {},
     };
+  },
+  watch: {
+    jsonData(newData) {
+      this.jsonEditorData = newData;
+      this.editor.set(this.jsonEditorData);
+    },
   },
   created() {
     this.jsonEditorData = this.jsonData;
