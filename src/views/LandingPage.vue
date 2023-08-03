@@ -84,10 +84,6 @@ import { v4 as uuidv4 } from "uuid";
 import InputField from "@/components/InputField.vue";
 import FloatBtn from "@/components/FloatBtn.vue";
 import JsonEditor from "@/components/JsonEditor.vue";
-// import { faker } from "@faker-js/faker";
-// import {faker} from "faker";
-
-// import { fakerDataExamples } from "../data/data";
 import { fakerGenerateEntry } from "../data/fakerData";
 export default {
   computed: {},
@@ -126,7 +122,7 @@ export default {
       showCopyBtn: false,
       showInputFloat: false,
       showEditorFloat: false,
-      outputJsonData: "output will show here",
+      outputJsonData: { key: "output will show here" },
       addFieldCount: 1,
     };
   },
