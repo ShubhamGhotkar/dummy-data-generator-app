@@ -28,7 +28,10 @@
         @mouseenter="handleshowEditorFloat"
         @mouseleave="handleHideEditorFloat"
       >
-        <JsonEditor />
+        <JsonEditor
+          @editorContent="setEditorContent"
+          :jsonData="editorFieldData"
+        />
         <FloatBtn
           :add_field="false"
           :showFloat="showEditorFloat"
@@ -124,6 +127,13 @@ export default {
       showEditorFloat: false,
       outputJsonData: { key: "output will show here" },
       addFieldCount: 1,
+      editorFieldData: {
+        _id: "id",
+        first_person: "string",
+        last_person: "string",
+        full_name: "String",
+        Image: "url",
+      },
     };
   },
   components: {
@@ -180,7 +190,31 @@ export default {
       this.outputJsonData = outputObject;
     },
     generateDataFromJsonField() {
-      // window.alert("Json");
+      let outputObject = {};
+      for (let [key] of Object.entries(this.editorFieldData)) {
+        let stringLength = key.length;
+        while (stringLength > 0) {
+          let checkKey = key.slice(0, stringLength);
+          let fakerKey = fakerGenerateEntry.find((suggestion) => {
+            let fakerType = suggestion.data_type.toLocaleLowerCase();
+            let checkWord = checkKey.replace(/"/g, "").toLocaleLowerCase();
+            return fakerType.includes(checkWord);
+          });
+
+          if (fakerKey) {
+            outputObject[key] = fakerKey.example();
+            break;
+          }
+          outputObject[key] = Math.random();
+          stringLength--;
+        }
+      }
+
+      console.log("outputObject", outputObject);
+      this.outputJsonData = outputObject;
+    },
+    setEditorContent(editorData) {
+      this.editorFieldData = editorData;
     },
   },
 };

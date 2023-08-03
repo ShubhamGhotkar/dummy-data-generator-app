@@ -16,20 +16,15 @@ export default {
           mode: "code",
           enableSort: false,
           enableTransform: false,
+          schema: {
+            name: "String",
+            age: "Number",
+          },
         };
       },
     },
     jsonData: {
       type: Object,
-      default: () => {
-        return {
-          _id: "id",
-          first_person: "string",
-          last_person: "string",
-          full_name: "String",
-          Image: "url",
-        };
-      },
     },
   },
   data() {
@@ -72,10 +67,13 @@ export default {
         this.handleEditorChange(...e.lines);
       });
     },
-    handleEditorChange(key) {
-      if (key === ":") {
-        this.showSuggestions(key);
-      }
+    handleEditorChange() {
+      const aceEditor = this.editor.aceEditor;
+      const textContent = aceEditor.getValue();
+      this.$emit("editorContent", textContent);
+      // if (key === ":") {
+      // this.showSuggestions(key);
+      // }
     },
 
     showSuggestions() {
@@ -98,12 +96,21 @@ export default {
 
       const suggestionItem = document.createElement("select");
       suggestionItem.classList.add("selectOption");
+      const option = document.createElement("option");
+      option.textContent = "chose....";
+      suggestionItem.appendChild(option);
 
-      filteredSugestions.forEach((suggestion) => {
+      if (filteredSugestions.length > 0) {
+        filteredSugestions.forEach((suggestion) => {
+          const option = document.createElement("option");
+          option.textContent = suggestion.data_type;
+          suggestionItem.appendChild(option);
+        });
+      } else {
         const option = document.createElement("option");
-        option.textContent = suggestion.data_type;
+        option.value = "invalid";
         suggestionItem.appendChild(option);
-      });
+      }
 
       suggestionItem.addEventListener("change", (event) => {
         this.insertSuggestion(event.target.value);
@@ -166,9 +173,15 @@ export default {
 }
 
 .selectOption {
-  // position: absolute;
-  // top: 20%;
-  // right: 20%;
-  background: purple;
+  box-shadow: 0 0 0.5rem whitesmoke;
+  z-index: 9999;
+  border: 0.1rem solid whitesmoke;
+  padding: 0.3rem 0.5rem;
+  background: $primary-white;
+  outline: none;
+  font-size: 1rem;
+  color: $primary-gray;
+
+  cursor: pointer;
 }
 </style>
