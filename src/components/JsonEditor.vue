@@ -70,29 +70,15 @@ export default {
       const aceEditor = this.editor.aceEditor;
       aceEditor.getSession().on("change", (e) => {
         this.handleEditorChange(...e.lines);
-        // this.handleEditorChange(e);
       });
     },
     handleEditorChange(key) {
-      // const editorValue = this.editor.getText();
-      const insertItem = this.checkForColonInsertion(key);
-      if (insertItem) {
+      if (key === ":") {
         this.showSuggestions(key);
-        // console.log("showSuggestions");
-      } else {
-        // this.hideSuggestions();
-        console.log("hideSuggestions");
       }
     },
-    checkForColonInsertion(changeEvent) {
-      if (changeEvent === ":") {
-        return true;
-      }
 
-      return false;
-    },
     showSuggestions() {
-      // console.log(key);
       const aceEditor = this.editor.aceEditor;
       const currentPosition = aceEditor.getCursorPosition();
       const line = aceEditor.session.getLine(currentPosition.row);
@@ -101,19 +87,43 @@ export default {
       let filteredSugestions = fakerGenerateEntry.filter((suggestion) => {
         let fakerType = suggestion.data_type.toLocaleLowerCase();
         let checkWord = currentWord.replace(/"/g, "").toLocaleLowerCase();
-        if (fakerType.includes(checkWord)) {
-          return suggestion;
-        }
+        return fakerType.includes(checkWord);
       });
 
-      filteredSugestions.forEach((e) =>
-        console.log("filteredSugestions ==>", e.data_type)
-      );
+      const suggestionBox = this.$refs.jsonEditorContainer;
+
+      if (!suggestionBox) {
+        return;
+      }
+
+      const suggestionItem = document.createElement("select");
+      suggestionItem.classList.add("selectOption");
+
+      filteredSugestions.forEach((suggestion) => {
+        const option = document.createElement("option");
+        option.textContent = suggestion.data_type;
+        suggestionItem.appendChild(option);
+      });
+
+      suggestionItem.addEventListener("change", (event) => {
+        this.insertSuggestion(event.target.value);
+        suggestionItem.remove();
+      });
+
+      suggestionItem.style.position = "absolute";
+      suggestionItem.style.top = currentPosition.row * 20 + "px";
+      suggestionItem.style.left = currentPosition.column * 10 + "px";
+      suggestionBox.appendChild(suggestionItem);
     },
     getCurrentWord(line, column) {
       const lineBeforeCursor = line.slice(0, column);
       const words = lineBeforeCursor.split(/\s+/);
       return words[words.length - 1];
+    },
+    insertSuggestion(suggestion) {
+      const aceEditor = this.editor.aceEditor;
+      const currentPosition = aceEditor.getCursorPosition();
+      aceEditor.session.insert(currentPosition, `"${suggestion}"`);
     },
   },
 };
@@ -124,6 +134,7 @@ export default {
   height: 100% !important;
   width: 100% !important;
   outline: none;
+  position: relative;
 }
 </style>
 <style lang="scss">
@@ -152,5 +163,12 @@ export default {
 }
 .json-editor-container .jsoneditor-poweredBy {
   display: none;
+}
+
+.selectOption {
+  // position: absolute;
+  // top: 20%;
+  // right: 20%;
+  background: purple;
 }
 </style>
