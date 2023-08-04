@@ -102,9 +102,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dialog-popup {
-  // z-index: 99999999;
-}
+// .dialog-popup {
+//   // z-index: 99999999;
+// }
 .hover {
   &:hover {
     background: rgba(0, 0, 0, 0.099);

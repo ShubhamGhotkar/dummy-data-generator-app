@@ -38,7 +38,7 @@ export default {
   watch: {
     jsonData(newData) {
       this.jsonEditorData = newData;
-      this.editor.set(this.jsonEditorData);
+      this.editor.set(this.getObjectFromArray(this.jsonEditorData));
     },
   },
   created() {
@@ -47,8 +47,6 @@ export default {
   },
   mounted() {
     this.initJSONEditor();
-    this.jsonEditorData = this.jsonData;
-    this.jsonEditorOptions = this.options;
   },
   beforeDestroy() {
     if (this.editor) {
@@ -61,7 +59,7 @@ export default {
       const container = this.$refs.jsonEditorContainer;
       this.editor = new JSONEditor(container, this.jsonEditorOptions);
 
-      this.editor.set(this.jsonEditorData);
+      this.editor.set(this.getObjectFromArray(this.jsonEditorData));
 
       // Add event listener to the aceEditor to capture keystrokes
       const aceEditor = this.editor.aceEditor;
@@ -128,6 +126,15 @@ export default {
       const aceEditor = this.editor.aceEditor;
       const currentPosition = aceEditor.getCursorPosition();
       aceEditor.session.insert(currentPosition, `"${suggestion}"`);
+    },
+
+    getObjectFromArray(jsonArray) {
+      let jsonData = jsonArray.reduce((obj, item) => {
+        obj[item.schemaKey] = item.schemaType;
+        return obj;
+      }, {});
+
+      return jsonData;
     },
   },
 };

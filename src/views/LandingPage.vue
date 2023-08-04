@@ -30,7 +30,7 @@
       >
         <JsonEditor
           @editorContent="setEditorContent"
-          :jsonData="editorFieldData"
+          :jsonData="schemaObjectArray"
         />
         <FloatBtn
           :add_field="false"
@@ -89,7 +89,7 @@ import FloatBtn from "@/components/FloatBtn.vue";
 import JsonEditor from "@/components/JsonEditor.vue";
 import { fakerGenerateEntry } from "../data/fakerData";
 export default {
-  computed: {},
+  computed() {},
   data() {
     return {
       schemaObjectArray: [
@@ -144,6 +144,7 @@ export default {
   },
   mounted() {
     this.fakerKeyArray = fakerGenerateEntry;
+    // this.editorFieldData = this.extractSchemaKeys(this.schemaObject);
   },
   methods: {
     addAnotherFieldToInputArray() {
@@ -214,6 +215,15 @@ export default {
     },
     setEditorContent(editorData) {
       this.editorFieldData = editorData;
+    },
+    extractSchemaKeys(schemaObjectArray) {
+      const extractedObject = schemaObjectArray.reduce((result, item) => {
+        result[item.schemaKey] = item.schemaType;
+        return result;
+      }, {});
+
+      console.log(extractedObject);
+      return extractedObject;
     },
   },
 };
