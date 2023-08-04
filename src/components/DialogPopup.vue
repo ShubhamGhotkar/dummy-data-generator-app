@@ -14,7 +14,7 @@
           </template>
           <template v-slot:default="dialog">
             <v-card>
-              <v-toolbar color="primary" dark>Opening from the top</v-toolbar>
+              <!-- <v-toolbar color="primary" dark>Opening from the top</v-toolbar> -->
               <!--  -->
               <v-card-actions
                 class="justify-end"
@@ -33,10 +33,7 @@
                 style="padding: 1rem"
                 @click="dialog.value = false"
               >
-                <v-col
-                  v-for="fakerData in fakerDataArray"
-                  :key="fakerData.data_type"
-                >
+                <v-col v-for="fakerData in fakerDataArray" :key="fakerData.id">
                   <v-card
                     class="mx-auto hover"
                     width="250"
@@ -69,7 +66,7 @@
 </template>
 
 <script>
-import { fakerDataExamples } from "../data/data";
+import { fakerGenerateEntry } from "../data/fakerData";
 
 export default {
   props: {
@@ -85,8 +82,8 @@ export default {
     },
   },
 
-  created() {
-    this.fakerDataArray = fakerDataExamples;
+  mounted() {
+    this.fakerDataArray = fakerGenerateEntry;
   },
   data: () => ({
     dialog: false,
@@ -95,6 +92,7 @@ export default {
 
   methods: {
     selectFakerDataType(dataType) {
+      // console.log(dataType);
       this.$emit("selectDataType", dataType, this.id);
     },
   },

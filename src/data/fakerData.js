@@ -416,12 +416,7 @@ export const fakerGenerateEntry = [
     example: "example",
   },
   { id: uuidv4(), data_type: "Verb", getData: faker.word.verb, example: "run" },
-  {
-    id: uuidv4(),
-    data_type: "words",
-    getData: faker.word.words,
-    example: "Lorem ipsum dolor sit amet",
-  },
+
   // Location
   {
     id: uuidv4(),
@@ -701,12 +696,6 @@ export const fakerGenerateEntry = [
     data_type: "word",
     getData: faker.lorem.word,
     example: "lorem",
-  },
-  {
-    id: uuidv4(),
-    data_type: "words",
-    getData: faker.lorem.words,
-    example: "Lorem ipsum dolor",
   },
   // Music
   {

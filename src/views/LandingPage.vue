@@ -71,7 +71,6 @@
               mode: 'text',
               enableTransform: false,
               enableSort: false,
-              repair: false,
             }"
             :jsonData="outputJsonData"
           />
@@ -89,7 +88,7 @@ import FloatBtn from "@/components/FloatBtn.vue";
 import JsonEditor from "@/components/JsonEditor.vue";
 import { fakerGenerateEntry } from "../data/fakerData";
 export default {
-  computed() {},
+  computed: {},
   data() {
     return {
       schemaObjectArray: [
@@ -127,13 +126,7 @@ export default {
       showEditorFloat: false,
       outputJsonData: { key: "output will show here" },
       addFieldCount: 1,
-      editorFieldData: {
-        _id: "id",
-        first_person: "string",
-        last_person: "string",
-        full_name: "String",
-        Image: "url",
-      },
+      editorFieldData: [],
     };
   },
   components: {
@@ -142,9 +135,10 @@ export default {
 
     JsonEditor,
   },
+
   mounted() {
     this.fakerKeyArray = fakerGenerateEntry;
-    // this.editorFieldData = this.extractSchemaKeys(this.schemaObject);
+    this.editorFieldData = this.schemaObjectArray;
   },
   methods: {
     addAnotherFieldToInputArray() {

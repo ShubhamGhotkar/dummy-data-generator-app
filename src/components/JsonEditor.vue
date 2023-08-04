@@ -24,7 +24,8 @@ export default {
       },
     },
     jsonData: {
-      type: Object,
+      type: [Array, Object],
+      required: true,
     },
   },
   data() {
@@ -35,13 +36,18 @@ export default {
       showSuggestion: false,
     };
   },
-  watch: {
-    jsonData(newData) {
-      this.jsonEditorData = newData;
 
-      this.editor.set(this.getObjectFromArray(this.jsonEditorData));
+  watch: {
+    jsonData: {
+      handler(newData) {
+        this.jsonEditorData = newData;
+        console.log("jsonData watcher triggered:", newData);
+        this.editor.set(this.getObjectFromArray(this.jsonEditorData));
+      },
+      deep: true,
     },
   },
+
   created() {
     this.jsonEditorData = this.jsonData;
     this.jsonEditorOptions = this.options;
@@ -64,12 +70,14 @@ export default {
 
       // Add event listener to the aceEditor to capture keystrokes
       const aceEditor = this.editor.aceEditor;
-      aceEditor.getSession().on("change", (e) => {
-        if (e.lines[0] === ":") {
-          this.handleEditorChange(...e.lines);
-          this.previousKey = e.lines[0];
-        }
-      });
+      if (aceEditor) {
+        aceEditor.getSession().on("change", (e) => {
+          if (e.lines[0] === ":") {
+            this.handleEditorChange(...e.lines);
+            this.previousKey = e.lines[0];
+          }
+        });
+      }
     },
     handleEditorChange(key) {
       if (key === ":") {
