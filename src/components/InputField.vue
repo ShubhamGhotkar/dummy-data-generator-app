@@ -103,9 +103,6 @@ export default {
 .input-field-container {
   width: 100%;
   height: 3rem;
-  // margin: 0.5rem auto;
-  // background: $primary-white;
-  // background: yellow;
 
   display: flex;
   align-items: center;

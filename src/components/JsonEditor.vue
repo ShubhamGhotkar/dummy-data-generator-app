@@ -67,8 +67,6 @@ export default {
       const aceEditor = this.editor.aceEditor;
       aceEditor.getSession().on("change", (e) => {
         if (e.lines[0] === ":") {
-          this.showSuggestion = !this.showSuggestion;
-          console.log(this.showSuggestion);
           this.handleEditorChange(...e.lines);
           this.previousKey = e.lines[0];
         }

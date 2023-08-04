@@ -55,16 +55,8 @@
                           {{ fakerData.example }}</v-list-item-subtitle
                         >
                       </v-list-item-content>
-
-                      <!-- <v-list-item-avatar
-                        tile
-                        size="40"
-                        color="grey"
-                      ></v-list-item-avatar> -->
                     </v-list-item>
-                    <v-card-actions>
-                      <!-- <v-btn text> Select </v-btn> -->
-                    </v-card-actions>
+                    <v-card-actions> </v-card-actions>
                   </v-card>
                 </v-col>
               </v-row>
@@ -78,6 +70,7 @@
 
 <script>
 import { fakerDataExamples } from "../data/data";
+
 export default {
   props: {
     field_type: {
@@ -91,58 +84,8 @@ export default {
       default: "",
     },
   },
+
   created() {
-    // let faker_data_examples = [
-    //   { data_type: "Name (Full Name)", example: "John Doe" },
-    //   { data_type: "Name (First Name)", example: "John" },
-    //   { data_type: "Name (Last Name)", example: "Doe" },
-    //   { data_type: "Address", example: "1234 Elm Street" },
-    //   { data_type: "Address (City)", example: "New York" },
-    //   { data_type: "Address (State)", example: "New York" },
-    //   { data_type: "Address (Country)", example: "United States" },
-    //   { data_type: "Address (Zip Code)", example: "10001" },
-    //   { data_type: "Email", example: "john.doe@example.com" },
-    //   { data_type: "Phone Number", example: "+1 (123) 456-7890" },
-    //   { data_type: "Date of Birth", example: "1985-07-15" },
-    //   { data_type: "Job", example: "Software Engineer" },
-    //   { data_type: "Company", example: "Acme Corporation" },
-    //   { data_type: "Text", example: "This is an example text." },
-    //   { data_type: "Credit Card Number", example: "**** **** **** 4321" },
-    //   { data_type: "Credit Card Expiration", example: "06/26" },
-    //   { data_type: "Color Name", example: "Red" },
-    //   { data_type: "Latitude", example: "40.7128" },
-    //   { data_type: "Longitude", example: "-74.0060" },
-    //   { data_type: "Random Number", example: "42" },
-    //   { data_type: "Random Float Number", example: "3.14" },
-    //   { data_type: "Random Array Element", example: "orange" },
-    //   { data_type: "Boolean", example: "true" },
-    //   { data_type: "Word", example: "example" },
-    //   { data_type: "Words", example: "example lorem ipsum" },
-    //   { data_type: "UUID", example: "d8e9a2a1-43aa-4c0b-846c-9c016c403b23" },
-    //   { data_type: "File Path", example: "/path/to/file.txt" },
-    //   { data_type: "Image URL", example: "http://example.com/image.jpg" },
-    //   {
-    //     data_type: "Avatar Image URL",
-    //     example: "http://example.com/avatar.jpg",
-    //   },
-    //   { data_type: "Domain Name", example: "example.com" },
-    //   { data_type: "URL", example: "http://www.example.com" },
-    //   { data_type: "IPv4 Address", example: "192.168.0.1" },
-    //   {
-    //     data_type: "User Agent",
-    //     example:
-    //       "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-    //   },
-    //   { data_type: "ISBN-10", example: "1234567890" },
-    //   { data_type: "ISBN-13", example: "978-1234567890" },
-    //   { data_type: "Language Code", example: "en" },
-    //   { data_type: "Currency Code", example: "USD" },
-    //   { data_type: "File Extension", example: ".txt" },
-    //   { data_type: "MIME Type", example: "application/pdf" },
-    //   { data_type: "Emoji", example: "😀" },
-    //   { data_type: "Password", example: "SecurePwd123!" },
-    //   { data_type: "Animal", example: "cat,fish,cow!" },
-    // ];
     this.fakerDataArray = fakerDataExamples;
   },
   data: () => ({
@@ -159,6 +102,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.dialog-popup {
+  // z-index: 99999999;
+}
 .hover {
   &:hover {
     background: rgba(0, 0, 0, 0.099);
@@ -198,7 +144,8 @@ export default {
 
   scroll-behavior: smooth;
 }
-// .v-btn__content {
-//   background: purple;
-// }
+.dialog-popup .v-btn__content {
+  text-transform: none;
+  // font-weight: inherit;
+}
 </style>

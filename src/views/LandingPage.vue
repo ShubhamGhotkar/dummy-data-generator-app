@@ -31,7 +31,6 @@
         <JsonEditor
           @editorContent="setEditorContent"
           :jsonData="editorFieldData"
-          v-model="dataxyz"
         />
         <FloatBtn
           :add_field="false"
@@ -97,28 +96,28 @@ export default {
         {
           id: uuidv4(),
           schemaKey: "_id",
-          schemaType: "Building Number",
+          schemaType: "id",
         },
         {
           id: uuidv4(),
           schemaKey: "first_person",
-          schemaType: "Name (First Name)",
+          schemaType: "first_name",
         },
         {
           id: uuidv4(),
           schemaKey: "last_person",
-          schemaType: "Name (Last Name)",
+          schemaType: "last_name",
         },
 
         {
           id: uuidv4(),
           schemaKey: "Full Name",
-          schemaType: "Name (Full Name)",
+          schemaType: "full_name",
         },
         {
           id: uuidv4(),
           schemaKey: "Image",
-          schemaType: "Image URL",
+          schemaType: "image_url",
         },
       ],
       fakerKeyArray: [],
@@ -135,7 +134,6 @@ export default {
         full_name: "String",
         Image: "url",
       },
-      dataxyz: "xyz",
     };
   },
   components: {
@@ -152,7 +150,7 @@ export default {
       let schemaObject = {
         id: uuidv4(),
         schemaKey: `add_field_${this.addFieldCount++}`,
-        schemaType: "Text",
+        schemaType: "text",
       };
 
       this.schemaObjectArray.push(schemaObject);
@@ -186,13 +184,12 @@ export default {
           (fakerKey) => fakerKey.data_type === schema.schemaType
         );
         if (acessKey) {
-          outputObject[schema.schemaKey] = acessKey.example();
+          outputObject[schema.schemaKey] = acessKey.getData();
         }
       }
       this.outputJsonData = outputObject;
     },
     generateDataFromJsonField() {
-      window.alert(this.dataxyz);
       let outputObject = {};
       for (let [key] of Object.entries(this.editorFieldData)) {
         let stringLength = key.length;
@@ -205,7 +202,7 @@ export default {
           });
 
           if (fakerKey) {
-            outputObject[key] = fakerKey.example();
+            outputObject[key] = fakerKey.getData();
             break;
           }
           outputObject[key] = Math.random();
@@ -213,7 +210,6 @@ export default {
         }
       }
 
-      console.log("outputObject", outputObject);
       this.outputJsonData = outputObject;
     },
     setEditorContent(editorData) {
