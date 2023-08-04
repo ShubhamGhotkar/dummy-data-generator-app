@@ -31,6 +31,7 @@
         <JsonEditor
           @editorContent="setEditorContent"
           :jsonData="editorFieldData"
+          v-model="dataxyz"
         />
         <FloatBtn
           :add_field="false"
@@ -134,6 +135,7 @@ export default {
         full_name: "String",
         Image: "url",
       },
+      dataxyz: "xyz",
     };
   },
   components: {
@@ -190,6 +192,7 @@ export default {
       this.outputJsonData = outputObject;
     },
     generateDataFromJsonField() {
+      window.alert(this.dataxyz);
       let outputObject = {};
       for (let [key] of Object.entries(this.editorFieldData)) {
         let stringLength = key.length;

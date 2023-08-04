@@ -31,6 +31,8 @@ export default {
     return {
       jsonEditorData: {},
       jsonEditorOptions: {},
+      previousKey: "",
+      showSuggestion: false,
     };
   },
   watch: {
@@ -64,16 +66,18 @@ export default {
       // Add event listener to the aceEditor to capture keystrokes
       const aceEditor = this.editor.aceEditor;
       aceEditor.getSession().on("change", (e) => {
-        this.handleEditorChange(...e.lines);
+        if (e.lines[0] === ":") {
+          this.showSuggestion = !this.showSuggestion;
+          console.log(this.showSuggestion);
+          this.handleEditorChange(...e.lines);
+          this.previousKey = e.lines[0];
+        }
       });
     },
-    handleEditorChange() {
-      const aceEditor = this.editor.aceEditor;
-      const textContent = aceEditor.getValue();
-      this.$emit("editorContent", textContent);
-      // if (key === ":") {
-      // this.showSuggestions(key);
-      // }
+    handleEditorChange(key) {
+      if (key === ":") {
+        this.showSuggestions(key);
+      }
     },
 
     showSuggestions() {
@@ -81,6 +85,8 @@ export default {
       const currentPosition = aceEditor.getCursorPosition();
       const line = aceEditor.session.getLine(currentPosition.row);
       const currentWord = this.getCurrentWord(line, currentPosition.column);
+      const suggestionItem = document.createElement("ul");
+      suggestionItem.classList.add("selectOption");
 
       let filteredSugestions = fakerGenerateEntry.filter((suggestion) => {
         let fakerType = suggestion.data_type.toLocaleLowerCase();
@@ -88,38 +94,31 @@ export default {
         return fakerType.includes(checkWord);
       });
 
+      if (filteredSugestions.length === 0) {
+        filteredSugestions = fakerGenerateEntry;
+      }
       const suggestionBox = this.$refs.jsonEditorContainer;
 
       if (!suggestionBox) {
         return;
       }
 
-      const suggestionItem = document.createElement("select");
-      suggestionItem.classList.add("selectOption");
-      const option = document.createElement("option");
-      option.textContent = "chose....";
-      suggestionItem.appendChild(option);
-
-      if (filteredSugestions.length > 0) {
-        filteredSugestions.forEach((suggestion) => {
-          const option = document.createElement("option");
-          option.textContent = suggestion.data_type;
-          suggestionItem.appendChild(option);
-        });
-      } else {
-        const option = document.createElement("option");
-        option.value = "invalid";
+      filteredSugestions.forEach((suggestion) => {
+        const option = document.createElement("li");
+        option.textContent = suggestion.data_type;
         suggestionItem.appendChild(option);
-      }
+      });
 
-      suggestionItem.addEventListener("change", (event) => {
-        this.insertSuggestion(event.target.value);
-        suggestionItem.remove();
+      suggestionItem.addEventListener("click", (event) => {
+        this.insertSuggestion(event.target.innerText);
+        suggestionBox.removeChild(suggestionItem);
       });
 
       suggestionItem.style.position = "absolute";
+
       suggestionItem.style.top = currentPosition.row * 20 + "px";
       suggestionItem.style.left = currentPosition.column * 10 + "px";
+
       suggestionBox.appendChild(suggestionItem);
     },
     getCurrentWord(line, column) {
@@ -173,6 +172,7 @@ export default {
 }
 
 .selectOption {
+  max-height: 10rem !important;
   box-shadow: 0 0 0.5rem whitesmoke;
   z-index: 9999;
   border: 0.1rem solid whitesmoke;
@@ -181,7 +181,9 @@ export default {
   outline: none;
   font-size: 1rem;
   color: $primary-gray;
+  overflow-y: scroll;
 
   cursor: pointer;
+  z-index: 9999999 !important;
 }
 </style>
