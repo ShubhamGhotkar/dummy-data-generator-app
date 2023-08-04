@@ -191,27 +191,28 @@ export default {
       this.outputJsonData = outputObject;
     },
     generateDataFromJsonField() {
-      let outputObject = {};
-      for (let [key] of Object.entries(this.editorFieldData)) {
-        let stringLength = key.length;
-        while (stringLength > 0) {
-          let checkKey = key.slice(0, stringLength);
-          let fakerKey = fakerGenerateEntry.find((suggestion) => {
-            let fakerType = suggestion.data_type.toLocaleLowerCase();
-            let checkWord = checkKey.replace(/"/g, "").toLocaleLowerCase();
-            return fakerType.includes(checkWord);
-          });
+      // let outputObject = {};
+      // for (let [key] of Object.entries(this.editorFieldData)) {
+      //   let stringLength = key.length;
+      //   while (stringLength > 0) {
+      //     let checkKey = key.slice(0, stringLength);
+      //     let fakerKey = fakerGenerateEntry.find((suggestion) => {
+      //       let fakerType = suggestion.data_type.toLocaleLowerCase();
+      //       let checkWord = checkKey.replace(/"/g, "").toLocaleLowerCase();
+      //       return fakerType.includes(checkWord);
+      //     });
 
-          if (fakerKey) {
-            outputObject[key] = fakerKey.getData();
-            break;
-          }
-          outputObject[key] = Math.random();
-          stringLength--;
-        }
-      }
+      //     if (fakerKey) {
+      //       outputObject[key] = fakerKey.getData();
+      //       break;
+      //     }
+      //     outputObject[key] = Math.random();
+      //     stringLength--;
+      //   }
+      // }
 
-      this.outputJsonData = outputObject;
+      // this.outputJsonData = outputObject;
+      this.generateDataFromInputField();
     },
     setEditorContent(editorData) {
       this.editorFieldData = editorData;

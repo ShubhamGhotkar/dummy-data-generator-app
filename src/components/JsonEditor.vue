@@ -38,6 +38,7 @@ export default {
   watch: {
     jsonData(newData) {
       this.jsonEditorData = newData;
+
       this.editor.set(this.getObjectFromArray(this.jsonEditorData));
     },
   },
@@ -129,12 +130,15 @@ export default {
     },
 
     getObjectFromArray(jsonArray) {
-      let jsonData = jsonArray.reduce((obj, item) => {
-        obj[item.schemaKey] = item.schemaType;
-        return obj;
-      }, {});
+      if (Array.isArray(jsonArray)) {
+        let jsonData = jsonArray.reduce((obj, item) => {
+          obj[item.schemaKey] = item.schemaType;
+          return obj;
+        }, {});
 
-      return jsonData;
+        return jsonData;
+      }
+      return jsonArray;
     },
   },
 };
