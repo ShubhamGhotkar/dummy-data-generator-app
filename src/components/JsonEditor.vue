@@ -33,7 +33,7 @@ export default {
       jsonEditorData: {},
       jsonEditorOptions: {},
       previousKey: "",
-      showSuggestion: false,
+      showSuggestionOnEditor: false,
     };
   },
 
@@ -73,15 +73,12 @@ export default {
       if (aceEditor) {
         aceEditor.getSession().on("change", (e) => {
           if (e.lines[0] === ":") {
-            this.handleEditorChange(...e.lines);
-            this.previousKey = e.lines[0];
+            this.showSuggestionOnEditor = !this.showSuggestionOnEditor;
+            this.showSuggestions(...e.lines);
+          } else {
+            this.hideSuggestion();
           }
         });
-      }
-    },
-    handleEditorChange(key) {
-      if (key === ":") {
-        this.showSuggestions(key);
       }
     },
 
@@ -116,7 +113,7 @@ export default {
 
       suggestionItem.addEventListener("click", (event) => {
         this.insertSuggestion(event.target.innerText);
-        suggestionBox.removeChild(suggestionItem);
+        this.hideSuggestion();
       });
 
       suggestionItem.style.position = "absolute";
@@ -147,6 +144,15 @@ export default {
         return jsonData;
       }
       return jsonArray;
+    },
+
+    hideSuggestion() {
+      const suggestion = document.getElementsByClassName("selectOption");
+      if (suggestion) {
+        Array.from(suggestion).forEach((item) => {
+          item.remove();
+        });
+      }
     },
   },
 };
