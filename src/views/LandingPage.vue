@@ -12,7 +12,7 @@
         </div>
         <div class="input-container-item-input-field field-container">
           <InputField
-            :objectList="schemaObjectArray"
+            :objectList="sendData"
             @updateSchemaArray="setUpdatedSchemaArray"
           />
         </div>
@@ -20,7 +20,7 @@
           :showFloat="showInputFloat"
           @addAnotherFieldToInputArray="addAnotherFieldToInputArray"
           @mouseenter="handleshowInputFloat"
-          @generateData="generateDataFromInputField"
+          @generateData="generateDataFromSchema"
         />
       </div>
       <div
@@ -29,14 +29,14 @@
         @mouseleave="handleHideEditorFloat"
       >
         <JsonEditor
-          @editorContent="setEditorContent"
-          :jsonData="schemaObjectArray"
+          @updateDataFromEditor="setEditorDataToSchemaObject"
+          :jsonData="sendData"
         />
         <FloatBtn
           :add_field="false"
           :showFloat="showEditorFloat"
           @mouseenter="handleshowEditorFloat"
-          @generateData="generateDataFromJsonField"
+          @generateData="generateDataFromSchema"
         />
       </div>
     </div>
@@ -88,7 +88,11 @@ import FloatBtn from "@/components/FloatBtn.vue";
 import JsonEditor from "@/components/JsonEditor.vue";
 import { fakerGenerateEntry } from "../data/fakerData";
 export default {
-  computed: {},
+  computed: {
+    sendData() {
+      return this.schemaObjectArray;
+    },
+  },
   data() {
     return {
       schemaObjectArray: [
@@ -135,6 +139,15 @@ export default {
 
     JsonEditor,
   },
+  watch: {
+    schemaObjectArray: {
+      handler() {
+        // this.schemaObjectArray = newData;
+        // console.log("newData", newData);
+      },
+      deep: true,
+    },
+  },
 
   mounted() {
     this.fakerKeyArray = fakerGenerateEntry;
@@ -171,7 +184,7 @@ export default {
     handleHideCopyBtn() {
       this.showCopyBtn = false;
     },
-    generateDataFromInputField() {
+    generateDataFromSchema() {
       let outputObject = {};
 
       for (let schema of this.schemaObjectArray) {
@@ -184,32 +197,23 @@ export default {
       }
       this.outputJsonData = outputObject;
     },
-    generateDataFromJsonField() {
-      // let outputObject = {};
-      // for (let [key] of Object.entries(this.editorFieldData)) {
-      //   let stringLength = key.length;
-      //   while (stringLength > 0) {
-      //     let checkKey = key.slice(0, stringLength);
-      //     let fakerKey = fakerGenerateEntry.find((suggestion) => {
-      //       let fakerType = suggestion.data_type.toLocaleLowerCase();
-      //       let checkWord = checkKey.replace(/"/g, "").toLocaleLowerCase();
-      //       return fakerType.includes(checkWord);
-      //     });
 
-      //     if (fakerKey) {
-      //       outputObject[key] = fakerKey.getData();
-      //       break;
-      //     }
-      //     outputObject[key] = Math.random();
-      //     stringLength--;
-      //   }
-      // }
+    setEditorDataToSchemaObject(editorData) {
+      let updatedObject = [];
+      for (let [key, value] of Object.entries(editorData)) {
+        let object = {
+          id: uuidv4(),
+          schemaKey: key,
+          schemaType: value,
+        };
+        updatedObject.push(object);
+      }
 
-      // this.outputJsonData = outputObject;
-      this.generateDataFromInputField();
-    },
-    setEditorContent(editorData) {
-      this.editorFieldData = editorData;
+      this.schemaObjectArray.splice(
+        0,
+        this.schemaObjectArray.length,
+        ...updatedObject
+      );
     },
     extractSchemaKeys(schemaObjectArray) {
       const extractedObject = schemaObjectArray.reduce((result, item) => {

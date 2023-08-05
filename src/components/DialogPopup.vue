@@ -9,6 +9,7 @@
               v-on="on"
               :elevation="0"
               class="dialogue-open-btn"
+              :ripple="false"
               >{{ field_type }}</v-btn
             >
           </template>

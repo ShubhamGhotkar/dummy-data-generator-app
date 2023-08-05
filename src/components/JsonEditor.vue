@@ -34,6 +34,7 @@ export default {
       jsonEditorOptions: {},
       previousKey: "",
       showSuggestionOnEditor: false,
+      updatedData: {},
     };
   },
 
@@ -41,7 +42,6 @@ export default {
     jsonData: {
       handler(newData) {
         this.jsonEditorData = newData;
-        console.log("jsonData watcher triggered:", newData);
         this.editor.set(this.getObjectFromArray(this.jsonEditorData));
       },
       deep: true,
@@ -111,10 +111,18 @@ export default {
         suggestionItem.appendChild(option);
       });
 
-      suggestionItem.addEventListener("click", (event) => {
-        this.insertSuggestion(event.target.innerText);
-        this.hideSuggestion();
-      });
+      suggestionItem.addEventListener(
+        "click",
+        (event) => {
+          this.insertSuggestion(event.target.innerText);
+          console.log("this.checkEditorError()", this.checkEditorError());
+          this.hideSuggestion();
+          if (!this.checkEditorError()) {
+            this.$emit("updateDataFromEditor", this.getEditorData());
+          }
+        },
+        { once: true }
+      );
 
       suggestionItem.style.position = "absolute";
 
@@ -153,6 +161,24 @@ export default {
           item.remove();
         });
       }
+    },
+    checkEditorError() {
+      try {
+        const jsonString = this.editor.getText();
+        JSON.parse(jsonString);
+        return false;
+      } catch (error) {
+        console.log("JSON parsing error:", error.message);
+        return true;
+      }
+    },
+    getEditorData() {
+      const aceEditor = this.editor.aceEditor;
+      if (aceEditor) {
+        const data = aceEditor.getValue();
+        return JSON.parse(data);
+      }
+      return null;
     },
   },
 };

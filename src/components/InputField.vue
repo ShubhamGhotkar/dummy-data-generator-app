@@ -55,7 +55,16 @@ export default {
   components: {
     DialogPopup,
   },
-  created() {
+  watch: {
+    schemaObjectArray: {
+      handler(newData) {
+        // this.schemaObjectArray = newData;
+        console.log("newData", newData);
+      },
+      deep: true,
+    },
+  },
+  mounted() {
     this.schemaObjectArray = this.objectList;
   },
   data() {
