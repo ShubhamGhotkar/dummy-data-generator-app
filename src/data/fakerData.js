@@ -711,4 +711,10 @@ export const fakerGenerateEntry = [
     example: "Bohemian Rhapsody",
   },
   //   Random
+  {
+    id: uuidv4(),
+    data_type: "empty_string",
+    getData: () => "",
+    example: " ",
+  },
 ];

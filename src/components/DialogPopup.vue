@@ -10,7 +10,7 @@
               :elevation="0"
               class="dialogue-open-btn"
               :ripple="false"
-              >{{ field_type }}</v-btn
+              >{{ formatText(field_type) }}</v-btn
             >
           </template>
           <template v-slot:default="dialog">
@@ -96,6 +96,9 @@ export default {
       // console.log(dataType);
       this.$emit("selectDataType", dataType, this.id);
     },
+    formatText(text) {
+      return text.replaceAll("_", " ");
+    },
   },
 };
 </script>
@@ -143,8 +146,8 @@ export default {
 
   scroll-behavior: smooth;
 }
-.dialog-popup .v-btn__content {
-  text-transform: none;
-  // font-weight: inherit;
-}
+// .dialog-popup .v-btn__content {
+//   // text-transform: none;
+//   // font-weight: inherit;
+// }
 </style>
