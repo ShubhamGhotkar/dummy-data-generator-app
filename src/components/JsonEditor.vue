@@ -68,12 +68,23 @@ export default {
 
       this.editor.set(this.getObjectFromArray(this.jsonEditorData));
 
-      // Add event listener to the aceEditor to capture keystrokes
       const aceEditor = this.editor.aceEditor;
+
       if (aceEditor) {
         aceEditor.getSession().on("change", (e) => {
-          if (e.lines[0] === ":") {
-            this.showSuggestionOnEditor = !this.showSuggestionOnEditor;
+          const currentPosition = aceEditor.getCursorPosition();
+          const line = aceEditor.session.getLine(currentPosition.row);
+
+          const isBackspacePressed = e.action === "remove";
+
+          this.showSuggestionOnEditor =
+            line.indexOf(":") === line.lastIndexOf(":") ? true : false;
+
+          if (
+            e.lines[0] === ":" &&
+            this.showSuggestionOnEditor &&
+            !isBackspacePressed
+          ) {
             this.showSuggestions(...e.lines);
           } else {
             this.hideSuggestion();
@@ -168,9 +179,18 @@ export default {
         JSON.parse(jsonString);
         return false;
       } catch (error) {
-        console.log("JSON parsing error:", error.message);
+        // console.log("JSON parsing error:", error.message);
         return true;
       }
+    },
+    async getEditorError() {
+      const error = await this.editor.validate();
+      if (error) {
+        let errorMessage = error[0].message;
+        return errorMessage;
+      }
+
+      return false;
     },
     getEditorData() {
       const aceEditor = this.editor.aceEditor;
@@ -179,6 +199,16 @@ export default {
         return JSON.parse(data);
       }
       return null;
+    },
+
+    isShowSugestion(error) {
+      switch (error) {
+        case `this.getEditorError() Parse error on line 7:<br>...age_url",  "name":}<br>---------------------^<br>Expecting 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '[', got '}'`:
+          return true;
+
+        default:
+          return false;
+      }
     },
   },
 };

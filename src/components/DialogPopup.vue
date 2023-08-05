@@ -15,8 +15,6 @@
           </template>
           <template v-slot:default="dialog">
             <v-card>
-              <!-- <v-toolbar color="primary" dark>Opening from the top</v-toolbar> -->
-              <!--  -->
               <v-card-actions
                 class="justify-end"
                 style="display: flex; justify-content: flex-end; padding: 0"
@@ -45,7 +43,6 @@
                   >
                     <v-list-item three-line>
                       <v-list-item-content>
-                        <!-- <div class="text-overline mb-4">Tittle</div> -->
                         <v-list-item-title class="text-h2 mb-1">
                           {{ fakerData.data_type }}
                         </v-list-item-title>
@@ -93,7 +90,6 @@ export default {
 
   methods: {
     selectFakerDataType(dataType) {
-      // console.log(dataType);
       this.$emit("selectDataType", dataType, this.id);
     },
     formatText(text) {
@@ -104,9 +100,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .dialog-popup {
-//   // z-index: 99999999;
-// }
 .hover {
   &:hover {
     background: rgba(0, 0, 0, 0.099);

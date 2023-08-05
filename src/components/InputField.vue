@@ -56,10 +56,9 @@ export default {
     DialogPopup,
   },
   watch: {
-    schemaObjectArray: {
+    objectList: {
       handler(newData) {
-        // this.schemaObjectArray = newData;
-        console.log("newData", newData);
+        this.schemaObjectArray = newData;
       },
       deep: true,
     },
@@ -75,9 +74,7 @@ export default {
       items: ["String", "Number", "URL", "ID"],
     };
   },
-  updated() {
-    // console.log(this.schemaObjectArray);
-  },
+
   methods: {
     deleteSchemaObject(id) {
       this.schemaObjectArray = this.schemaObjectArray.filter(
