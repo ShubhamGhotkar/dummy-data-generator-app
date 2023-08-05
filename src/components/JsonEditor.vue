@@ -86,6 +86,7 @@ export default {
             !isBackspacePressed
           ) {
             this.showSuggestions(...e.lines);
+            aceEditor.setReadOnly(true);
           } else {
             this.hideSuggestion();
           }
@@ -172,6 +173,7 @@ export default {
           item.remove();
         });
       }
+      this.editor.aceEditor.setReadOnly(false);
     },
     checkEditorError() {
       try {
