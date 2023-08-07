@@ -90,6 +90,7 @@ import FloatBtn from "@/components/FloatBtn.vue";
 import JsonEditor from "@/components/JsonEditor.vue";
 import { fakerGenerateEntry } from "../data/fakerData";
 import VSnackbar from "@/components/VSnackbar.vue";
+import { mapMutations } from "vuex";
 export default {
   computed: {
     sendData() {
@@ -148,6 +149,7 @@ export default {
     this.editorFieldData = this.schemaObjectArray;
   },
   methods: {
+    ...mapMutations(["SET_SHOW_MESSAGE"]),
     addAnotherFieldToInputArray() {
       let schemaObject = {
         id: uuidv4(),
@@ -156,6 +158,10 @@ export default {
       };
 
       this.schemaObjectArray.push(schemaObject);
+      this.SET_SHOW_MESSAGE({
+        showMessage: true,
+        showMessageText: "Another Field Added successfully.",
+      });
     },
     handleshowInputFloat() {
       this.showInputFloat = true;
@@ -192,7 +198,10 @@ export default {
         }
       }
       this.outputJsonData = outputObject;
-      // this.showSnackbar = true;
+      this.SET_SHOW_MESSAGE({
+        showMessage: true,
+        showMessageText: "Data Generated successfully.",
+      });
     },
     generateDataFromJsonSchema() {
       let updatedData = this.$refs.jsonEditor.getEditorData();

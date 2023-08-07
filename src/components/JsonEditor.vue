@@ -36,7 +36,7 @@ export default {
       previousKey: "",
       showSuggestionOnEditor: false,
       updatedData: {},
-      editorError: {},
+      editorError: [],
     };
   },
 
@@ -45,7 +45,15 @@ export default {
       handler(newData) {
         this.jsonEditorData = newData;
         this.editor.set(this.getObjectFromArray(this.jsonEditorData));
-        this.getEditorError();
+      },
+      deep: true,
+    },
+    editorError: {
+      handler(newErrors) {
+        console.log(
+          "Editor Errors:",
+          newErrors.map((m) => console.log(m))
+        );
       },
       deep: true,
     },
@@ -80,6 +88,15 @@ export default {
 
       if (aceEditor) {
         aceEditor.getSession().on("change", (e) => {
+          let errors = this.editorError;
+
+          if (errors.length > 0) {
+            this.SET_SHOW_MESSAGE({
+              showMessage: true,
+              showMessageText: `${errors[0].text} Error occurred.`,
+            });
+          }
+
           const currentPosition = aceEditor.getCursorPosition();
           const line = aceEditor.session.getLine(currentPosition.row);
           const isBackspacePressed = e.action === "remove";
@@ -104,7 +121,7 @@ export default {
           if (errors.length > 0 && errors[0].text !== "Bad string") {
             this.SET_SHOW_MESSAGE({
               showMessage: true,
-              showMessageText: "Error occurred while pasting data.\n" + e.text,
+              showMessageText: `${errors[0].text} Error occurred while pasting data.\n ${e.text}`,
             });
           } else {
             this.SET_SHOW_MESSAGE({
@@ -112,6 +129,15 @@ export default {
               showMessageText: "Data is pasted successfully.\n" + e.text,
             });
           }
+        });
+        aceEditor.on("focus", () => {
+          this.getEditorError();
+        });
+        aceEditor.on("copy", (e) => {
+          this.SET_SHOW_MESSAGE({
+            showMessage: true,
+            showMessageText: "Data copied successfully.\n" + e.text,
+          });
         });
       }
     },
