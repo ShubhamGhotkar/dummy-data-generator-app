@@ -40,6 +40,7 @@
           @generateData="generateDataFromJsonSchema"
         />
       </div>
+      <VSnackbar />
     </div>
     <div class="output-container">
       <div class="output-container-btn">
@@ -88,6 +89,7 @@ import InputField from "@/components/InputField.vue";
 import FloatBtn from "@/components/FloatBtn.vue";
 import JsonEditor from "@/components/JsonEditor.vue";
 import { fakerGenerateEntry } from "../data/fakerData";
+import VSnackbar from "@/components/VSnackbar.vue";
 export default {
   computed: {
     sendData() {
@@ -137,14 +139,8 @@ export default {
   components: {
     InputField,
     FloatBtn,
-
+    VSnackbar,
     JsonEditor,
-  },
-  watch: {
-    schemaObjectArray: {
-      handler() {},
-      deep: true,
-    },
   },
 
   mounted() {
@@ -196,6 +192,7 @@ export default {
         }
       }
       this.outputJsonData = outputObject;
+      // this.showSnackbar = true;
     },
     generateDataFromJsonSchema() {
       let updatedData = this.$refs.jsonEditor.getEditorData();
@@ -229,6 +226,11 @@ export default {
       console.log(extractedObject);
       return extractedObject;
     },
+    // handleMessage(payload) {
+    //   let { show, message } = payload;
+    //   this.snackbarMessage = message;
+    //   this.showSnackbar = show;
+    // },
   },
 };
 </script>

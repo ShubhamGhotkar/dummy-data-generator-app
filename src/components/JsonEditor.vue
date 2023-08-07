@@ -6,6 +6,7 @@
 import JSONEditor from "jsoneditor";
 import "jsoneditor/dist/jsoneditor.min.css";
 import { fakerGenerateEntry } from "../data/fakerData";
+import { mapMutations } from "vuex";
 
 export default {
   props: {
@@ -35,6 +36,7 @@ export default {
       previousKey: "",
       showSuggestionOnEditor: false,
       updatedData: {},
+      editorError: {},
     };
   },
 
@@ -43,6 +45,7 @@ export default {
       handler(newData) {
         this.jsonEditorData = newData;
         this.editor.set(this.getObjectFromArray(this.jsonEditorData));
+        this.getEditorError();
       },
       deep: true,
     },
@@ -53,6 +56,7 @@ export default {
     this.jsonEditorOptions = this.options;
   },
   mounted() {
+    // this.getEditorError();
     this.initJSONEditor();
   },
   beforeDestroy() {
@@ -60,8 +64,12 @@ export default {
       this.editor.destroy();
     }
   },
+  updated() {
+    this.getEditorError();
+  },
 
   methods: {
+    ...mapMutations(["SET_SHOW_MESSAGE"]),
     initJSONEditor() {
       const container = this.$refs.jsonEditorContainer;
       this.editor = new JSONEditor(container, this.jsonEditorOptions);
@@ -74,12 +82,10 @@ export default {
         aceEditor.getSession().on("change", (e) => {
           const currentPosition = aceEditor.getCursorPosition();
           const line = aceEditor.session.getLine(currentPosition.row);
-
           const isBackspacePressed = e.action === "remove";
-
           this.showSuggestionOnEditor =
             line.indexOf(":") === line.lastIndexOf(":") ? true : false;
-
+          this.getEditorError();
           if (
             e.lines[0] === ":" &&
             this.showSuggestionOnEditor &&
@@ -89,6 +95,22 @@ export default {
             aceEditor.setReadOnly(true);
           } else {
             this.hideSuggestion();
+          }
+        });
+
+        aceEditor.on("paste", (e) => {
+          let errors = this.editorError;
+
+          if (errors.length > 0 && errors[0].text !== "Bad string") {
+            this.SET_SHOW_MESSAGE({
+              showMessage: true,
+              showMessageText: "Error occurred while pasting data.\n" + e.text,
+            });
+          } else {
+            this.SET_SHOW_MESSAGE({
+              showMessage: true,
+              showMessageText: "Data is pasted successfully.\n" + e.text,
+            });
           }
         });
       }
@@ -127,10 +149,8 @@ export default {
         "click",
         (event) => {
           this.insertSuggestion(event.target.innerText);
-          console.log("this.checkEditorError()", this.checkEditorError());
           this.hideSuggestion();
           if (!this.checkEditorError()) {
-            // this.$emit("updateDataFromEditor", this.getEditorData());
             this.emitUpdateData();
           }
         },
@@ -177,23 +197,33 @@ export default {
       this.editor.aceEditor.setReadOnly(false);
     },
     checkEditorError() {
-      try {
-        const jsonString = this.editor.getText();
-        JSON.parse(jsonString);
-        return false;
-      } catch (error) {
-        // console.log("JSON parsing error:", error.message);
+      const aceEditor = this.editor.aceEditor;
+      const errors = aceEditor
+        .getSession()
+        .getAnnotations()
+        .map((m) => m.type);
+      console.log(aceEditor.getSession().getAnnotations());
+
+      if (errors[0] === "error") {
         return true;
+      } else {
+        return false;
       }
     },
-    async getEditorError() {
-      const error = await this.editor.validate();
-      if (error) {
-        let errorMessage = error[0].message;
-        return errorMessage;
-      }
+    getEditorError() {
+      const aceEditor = this.editor.aceEditor;
+      const errors = aceEditor.getSession().getAnnotations();
 
-      return false;
+      const errorMessages = errors.map((error) => {
+        return {
+          type: error.type,
+          row: error.row,
+          column: error.column,
+          text: error.text,
+        };
+      });
+
+      this.editorError = errorMessages;
     },
     getEditorData() {
       try {
@@ -204,8 +234,7 @@ export default {
           return JSON.parse(data);
         }
       } catch (error) {
-        console.log("Error parsing JSON data:", error);
-        return "";
+        return error;
       }
     },
 

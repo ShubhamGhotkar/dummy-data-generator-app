@@ -1,26 +1,19 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { v4 as uuidv4 } from "uuid";
+// import { v4 as uuidv4 } from "uuid";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    schemaObjectArray: [
-      {
-        id: uuidv4(),
-        schemaKey: "first_name",
-        schemaType: "String",
-      },
-      {
-        id: uuidv4(),
-        schemaKey: "last_name",
-        schemaType: "String",
-      },
-    ],
+    showMessage: false,
+    showMessageText: "",
   },
   getters: {},
   mutations: {
-    removeSchemaObjectFromArray() {},
+    SET_SHOW_MESSAGE(state, payload) {
+      state.showMessage = payload.showMessage;
+      state.showMessageText = payload.showMessageText;
+    },
   },
   actions: {},
   modules: {},
