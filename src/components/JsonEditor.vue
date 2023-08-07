@@ -130,7 +130,8 @@ export default {
           console.log("this.checkEditorError()", this.checkEditorError());
           this.hideSuggestion();
           if (!this.checkEditorError()) {
-            this.$emit("updateDataFromEditor", this.getEditorData());
+            // this.$emit("updateDataFromEditor", this.getEditorData());
+            this.emitUpdateData();
           }
         },
         { once: true }
@@ -195,12 +196,23 @@ export default {
       return false;
     },
     getEditorData() {
-      const aceEditor = this.editor.aceEditor;
-      if (aceEditor) {
-        const data = aceEditor.getValue();
-        return JSON.parse(data);
+      try {
+        const aceEditor = this.editor.aceEditor;
+        if (aceEditor) {
+          const data = aceEditor.getValue();
+          JSON.parse(data);
+          return JSON.parse(data);
+        }
+      } catch (error) {
+        console.log("Error parsing JSON data:", error);
+        return "";
       }
-      return null;
+    },
+
+    emitUpdateData() {
+      if (!this.checkEditorError()) {
+        this.$emit("updateDataFromEditor", this.getEditorData());
+      }
     },
 
     isShowSugestion(error) {

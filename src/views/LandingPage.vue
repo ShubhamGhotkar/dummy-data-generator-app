@@ -31,12 +31,13 @@
         <JsonEditor
           @updateDataFromEditor="setEditorDataToSchemaObject"
           :jsonData="sendData"
+          ref="jsonEditor"
         />
         <FloatBtn
           :add_field="false"
           :showFloat="showEditorFloat"
           @mouseenter="handleshowEditorFloat"
-          @generateData="generateDataFromSchema"
+          @generateData="generateDataFromJsonSchema"
         />
       </div>
     </div>
@@ -141,10 +142,7 @@ export default {
   },
   watch: {
     schemaObjectArray: {
-      handler() {
-        // this.schemaObjectArray = newData;
-        // console.log("newData", newData);
-      },
+      handler() {},
       deep: true,
     },
   },
@@ -193,9 +191,16 @@ export default {
         );
         if (acessKey) {
           outputObject[schema.schemaKey] = acessKey.getData();
+        } else {
+          outputObject[schema.schemaKey] = "";
         }
       }
       this.outputJsonData = outputObject;
+    },
+    generateDataFromJsonSchema() {
+      let updatedData = this.$refs.jsonEditor.getEditorData();
+      this.setEditorDataToSchemaObject(updatedData);
+      this.generateDataFromSchema();
     },
 
     setEditorDataToSchemaObject(editorData) {
