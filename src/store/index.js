@@ -11,6 +11,9 @@ export default new Vuex.Store({
   getters: {},
   mutations: {
     SET_SHOW_MESSAGE(state, payload) {
+      // if (state.showMessage) {
+      //   state.showMessage = false;
+      // }
       state.showMessage = payload.showMessage;
       state.showMessageText = payload.showMessageText;
     },

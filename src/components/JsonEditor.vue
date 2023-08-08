@@ -3,10 +3,10 @@
 </template>
 
 <script>
-import JSONEditor from "jsoneditor";
-import "jsoneditor/dist/jsoneditor.min.css";
 import { fakerGenerateEntry } from "../data/fakerData";
 import { mapMutations } from "vuex";
+import JSONEditor from "jsoneditor";
+import "jsoneditor/dist/jsoneditor.min.css";
 
 export default {
   props: {
@@ -17,10 +17,6 @@ export default {
           mode: "code",
           enableSort: false,
           enableTransform: false,
-          schema: {
-            name: "String",
-            age: "Number",
-          },
         };
       },
     },
@@ -33,9 +29,7 @@ export default {
     return {
       jsonEditorData: {},
       jsonEditorOptions: {},
-      previousKey: "",
       showSuggestionOnEditor: false,
-      updatedData: {},
       editorError: [],
     };
   },
@@ -48,15 +42,6 @@ export default {
       },
       deep: true,
     },
-    editorError: {
-      handler(newErrors) {
-        console.log(
-          "Editor Errors:",
-          newErrors.map((m) => console.log(m))
-        );
-      },
-      deep: true,
-    },
   },
 
   created() {
@@ -64,7 +49,6 @@ export default {
     this.jsonEditorOptions = this.options;
   },
   mounted() {
-    // this.getEditorError();
     this.initJSONEditor();
   },
   beforeDestroy() {
@@ -79,117 +63,170 @@ export default {
   methods: {
     ...mapMutations(["SET_SHOW_MESSAGE"]),
     initJSONEditor() {
-      const container = this.$refs.jsonEditorContainer;
-      this.editor = new JSONEditor(container, this.jsonEditorOptions);
+      try {
+        const container = this.$refs.jsonEditorContainer;
+        this.editor = new JSONEditor(container, this.jsonEditorOptions);
 
-      this.editor.set(this.getObjectFromArray(this.jsonEditorData));
+        this.editor.set(this.getObjectFromArray(this.jsonEditorData));
 
-      const aceEditor = this.editor.aceEditor;
+        const aceEditor = this.editor.aceEditor;
 
-      if (aceEditor) {
-        aceEditor.getSession().on("change", (e) => {
-          let errors = this.editorError;
+        if (aceEditor) {
+          const onEditorChange = (e) => {
+            this.getEditorError();
+            const errorsText = this.editorError.map((x) => x.text);
 
-          if (errors.length > 0) {
+            if (errorsText[0] === "Bad string") {
+              this.SET_SHOW_MESSAGE({
+                showMessage: true,
+                showMessageText: `Use Repair Option`,
+              });
+            }
+
+            const currentPosition = aceEditor.getCursorPosition();
+            const line = aceEditor.session.getLine(currentPosition.row);
+            const isBackspacePressed = e.action === "remove";
+            this.showSuggestionOnEditor =
+              line.indexOf(":") === line.lastIndexOf(":") ? true : false;
+            this.getEditorError();
+            if (
+              e.lines[0] === ":" &&
+              this.showSuggestionOnEditor &&
+              !isBackspacePressed
+            ) {
+              this.showSuggestions(...e.lines);
+              aceEditor.setReadOnly(true);
+            } else {
+              this.hideSuggestion();
+            }
+          };
+
+          const onEditorPaste = (e) => {
+            this.getEditorError();
+
+            const errors = this.editorError;
+
+            if (errors.length > 0 && errors[0].text !== "Bad string") {
+              this.SET_SHOW_MESSAGE({
+                showMessage: true,
+                showMessageText: `${errors[0].text} Error occurred while pasting data.\n ${e.text}`,
+              });
+            } else {
+              this.updatingJsonData = true;
+              this.SET_SHOW_MESSAGE({
+                showMessage: true,
+                showMessageText: "Data is pasted successfully.\n" + e.text,
+              });
+            }
+          };
+
+          const onEditorFocus = () => {
+            this.getEditorError();
+          };
+
+          const onEditorCopy = (e) => {
             this.SET_SHOW_MESSAGE({
               showMessage: true,
-              showMessageText: `${errors[0].text} Error occurred.`,
+              showMessageText: "Data copied successfully.\n" + e.text,
             });
-          }
+          };
 
-          const currentPosition = aceEditor.getCursorPosition();
-          const line = aceEditor.session.getLine(currentPosition.row);
-          const isBackspacePressed = e.action === "remove";
-          this.showSuggestionOnEditor =
-            line.indexOf(":") === line.lastIndexOf(":") ? true : false;
-          this.getEditorError();
-          if (
-            e.lines[0] === ":" &&
-            this.showSuggestionOnEditor &&
-            !isBackspacePressed
-          ) {
-            this.showSuggestions(...e.lines);
-            aceEditor.setReadOnly(true);
-          } else {
-            this.hideSuggestion();
-          }
-        });
+          const onEditorCut = () => {
+            this.updatingJsonData = false;
+          };
 
-        aceEditor.on("paste", (e) => {
-          let errors = this.editorError;
+          aceEditor.getSession().on("change", onEditorChange);
+          aceEditor.on("paste", onEditorPaste);
+          aceEditor.on("focus", onEditorFocus);
+          aceEditor.on("copy", onEditorCopy);
+          aceEditor.on("cut", onEditorCut);
 
-          if (errors.length > 0 && errors[0].text !== "Bad string") {
-            this.SET_SHOW_MESSAGE({
-              showMessage: true,
-              showMessageText: `${errors[0].text} Error occurred while pasting data.\n ${e.text}`,
-            });
-          } else {
-            this.SET_SHOW_MESSAGE({
-              showMessage: true,
-              showMessageText: "Data is pasted successfully.\n" + e.text,
-            });
-          }
-        });
-        aceEditor.on("focus", () => {
-          this.getEditorError();
-        });
-        aceEditor.on("copy", (e) => {
-          this.SET_SHOW_MESSAGE({
-            showMessage: true,
-            showMessageText: "Data copied successfully.\n" + e.text,
+          this.$once("hook:beforeDestroy", () => {
+            aceEditor.getSession().off("change", onEditorChange);
+            aceEditor.off("paste", onEditorPaste);
+            aceEditor.off("focus", onEditorFocus);
+            aceEditor.off("copy", onEditorCopy);
+            aceEditor.off("cut", onEditorCut);
           });
+        }
+      } catch (error) {
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: `Error initializing JSONEditor:${error}`,
         });
       }
     },
 
     showSuggestions() {
-      const aceEditor = this.editor.aceEditor;
-      const currentPosition = aceEditor.getCursorPosition();
-      const line = aceEditor.session.getLine(currentPosition.row);
-      const currentWord = this.getCurrentWord(line, currentPosition.column);
-      const suggestionItem = document.createElement("ul");
-      suggestionItem.classList.add("selectOption");
+      try {
+        const aceEditor = this.editor.aceEditor;
+        if (!aceEditor) {
+          this.SET_SHOW_MESSAGE({
+            showMessage: true,
+            showMessageText: `Ace editor not found.`,
+          });
+          return;
+        }
 
-      let filteredSugestions = fakerGenerateEntry.filter((suggestion) => {
-        let fakerType = suggestion.data_type.toLocaleLowerCase();
-        let checkWord = currentWord.replace(/"/g, "").toLocaleLowerCase();
-        return fakerType.includes(checkWord);
-      });
+        const currentPosition = aceEditor.getCursorPosition();
+        const line = aceEditor.session.getLine(currentPosition.row);
+        const currentWord = this.getCurrentWord(line, currentPosition.column);
+        const suggestionItem = document.createElement("ul");
+        suggestionItem.classList.add("selectOption");
 
-      if (filteredSugestions.length === 0) {
-        filteredSugestions = fakerGenerateEntry;
-      }
-      const suggestionBox = this.$refs.jsonEditorContainer;
+        let filteredSuggestions = fakerGenerateEntry.filter((suggestion) => {
+          let fakerType = suggestion.data_type.toLocaleLowerCase();
+          let checkWord = currentWord.replace(/"/g, "").toLocaleLowerCase();
+          return fakerType.includes(checkWord);
+        });
 
-      if (!suggestionBox) {
-        return;
-      }
+        if (filteredSuggestions.length === 0) {
+          filteredSuggestions = fakerGenerateEntry;
+        }
+        const suggestionBox = this.$refs.jsonEditorContainer;
 
-      filteredSugestions.forEach((suggestion) => {
-        const option = document.createElement("li");
-        option.textContent = suggestion.data_type;
-        suggestionItem.appendChild(option);
-      });
+        if (!suggestionBox) {
+          this.SET_SHOW_MESSAGE({
+            showMessage: true,
+            showMessageText: `Suggestion box element not found.`,
+          });
+          return;
+        }
 
-      suggestionItem.addEventListener(
-        "click",
-        (event) => {
-          this.insertSuggestion(event.target.innerText);
-          this.hideSuggestion();
-          if (!this.checkEditorError()) {
+        filteredSuggestions.forEach((suggestion) => {
+          const option = document.createElement("li");
+          option.textContent = suggestion.data_type;
+          suggestionItem.appendChild(option);
+        });
+
+        suggestionItem.addEventListener(
+          "click",
+          (event) => {
+            this.insertSuggestion(event.target.innerText);
+            this.hideSuggestion();
+
             this.emitUpdateData();
-          }
-        },
-        { once: true }
-      );
+          },
+          { once: true }
+        );
 
-      suggestionItem.style.position = "absolute";
+        suggestionItem.style.position = "absolute";
+        suggestionItem.style.top = currentPosition.row * 20 + "px";
+        suggestionItem.style.left = currentPosition.column * 10 + "px";
 
-      suggestionItem.style.top = currentPosition.row * 20 + "px";
-      suggestionItem.style.left = currentPosition.column * 10 + "px";
+        suggestionBox.appendChild(suggestionItem);
 
-      suggestionBox.appendChild(suggestionItem);
+        this.$once("hook:beforeDestroy", () => {
+          suggestionItem.remove();
+        });
+      } catch (error) {
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: `Error showing suggestions:${error}`,
+        });
+      }
     },
+
     getCurrentWord(line, column) {
       const lineBeforeCursor = line.slice(0, column);
       const words = lineBeforeCursor.split(/\s+/);
@@ -228,7 +265,6 @@ export default {
         .getSession()
         .getAnnotations()
         .map((m) => m.type);
-      console.log(aceEditor.getSession().getAnnotations());
 
       if (errors[0] === "error") {
         return true;
@@ -251,33 +287,38 @@ export default {
 
       this.editorError = errorMessages;
     },
+
     getEditorData() {
       try {
         const aceEditor = this.editor.aceEditor;
         if (aceEditor) {
           const data = aceEditor.getValue();
-          JSON.parse(data);
           return JSON.parse(data);
         }
       } catch (error) {
-        return error;
+        if (error instanceof SyntaxError) {
+          this.SET_SHOW_MESSAGE({
+            showMessage: true,
+            showMessageText: "Invalid JSON data. Check the input value.",
+          });
+        } else {
+          this.SET_SHOW_MESSAGE({
+            showMessage: true,
+            showMessageText:
+              "An error occurred while parsing JSON data: " + error.message,
+          });
+        }
+
+        const aceEditor = this.editor.aceEditor;
+        if (aceEditor) {
+          const data = aceEditor.getValue();
+          return JSON.parse(data);
+        }
       }
     },
 
     emitUpdateData() {
-      if (!this.checkEditorError()) {
-        this.$emit("updateDataFromEditor", this.getEditorData());
-      }
-    },
-
-    isShowSugestion(error) {
-      switch (error) {
-        case `this.getEditorError() Parse error on line 7:<br>...age_url",  "name":}<br>---------------------^<br>Expecting 'STRING', 'NUMBER', 'NULL', 'TRUE', 'FALSE', '{', '[', got '}'`:
-          return true;
-
-        default:
-          return false;
-      }
+      this.$emit("updateDataFromEditor", this.getEditorData());
     },
   },
 };
@@ -333,5 +374,11 @@ export default {
 
   cursor: pointer;
   z-index: 9999999 !important;
+}
+
+/* Example CSS for highlighting */
+.highlighted-paste {
+  background-color: yellow !important; /* Replace with your desired highlight color */
+  opacity: 0.5; /* Adjust the opacity to your preference */
 }
 </style>

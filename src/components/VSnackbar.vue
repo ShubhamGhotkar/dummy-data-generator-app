@@ -1,6 +1,6 @@
 <template>
   <div class="text-center ma-2 snack-bar">
-    <v-snackbar v-model="showSnackbar" absolute right top>
+    <v-snackbar v-model="showSnackbar" absolute right top :timeout="2000">
       {{ snackbarMessage }}
 
       <template v-slot:action="{ attrs }">

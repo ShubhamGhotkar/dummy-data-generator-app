@@ -186,22 +186,35 @@ export default {
     },
     generateDataFromSchema() {
       let outputObject = {};
-
+      let errorArray = [];
       for (let schema of this.schemaObjectArray) {
         let acessKey = this.fakerKeyArray.find(
           (fakerKey) => fakerKey.data_type === schema.schemaType
         );
-        if (acessKey) {
+        if (acessKey && acessKey.getData) {
           outputObject[schema.schemaKey] = acessKey.getData();
         } else {
+          errorArray.push(schema.schemaKey);
+
           outputObject[schema.schemaKey] = "";
         }
       }
-      this.outputJsonData = outputObject;
-      this.SET_SHOW_MESSAGE({
-        showMessage: true,
-        showMessageText: "Data Generated successfully.",
-      });
+
+      if (errorArray.length > 0) {
+        let message = errorArray.map((msg) => msg + "\n");
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: `${message} \n is not a Valid DataType,\n it's Update to Empty String \n and Generate Data`,
+        });
+      } else {
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: "Data Generated successfully.",
+        });
+      }
+      setTimeout(() => {
+        this.outputJsonData = outputObject;
+      }, 0);
     },
     generateDataFromJsonSchema() {
       let updatedData = this.$refs.jsonEditor.getEditorData();
@@ -235,11 +248,6 @@ export default {
       console.log(extractedObject);
       return extractedObject;
     },
-    // handleMessage(payload) {
-    //   let { show, message } = payload;
-    //   this.snackbarMessage = message;
-    //   this.showSnackbar = show;
-    // },
   },
 };
 </script>

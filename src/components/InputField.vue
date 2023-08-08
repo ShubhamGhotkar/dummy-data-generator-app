@@ -56,12 +56,15 @@ export default {
   components: {
     DialogPopup,
   },
-  watch: {
-    objectList: {
-      handler(newData) {
-        this.schemaObjectArray = newData;
+
+  computed: {
+    schemaObjectArray: {
+      get() {
+        return this.objectList;
       },
-      deep: true,
+      set(newData) {
+        this.$emit("updateSchemaArray", newData);
+      },
     },
   },
   mounted() {
@@ -70,7 +73,7 @@ export default {
   data() {
     return {
       showList: false,
-      schemaObjectArray: [],
+      // schemaObjectArray: [],
       selectedItem: "String",
       items: ["String", "Number", "URL", "ID"],
     };
