@@ -27,13 +27,12 @@ export default {
   },
   data() {
     return {
-      jsonEditorData: {},
+      // jsonEditorData: {},
       jsonEditorOptions: {},
       showSuggestionOnEditor: false,
       editorError: [],
     };
   },
-
   watch: {
     jsonData: {
       handler(newData) {

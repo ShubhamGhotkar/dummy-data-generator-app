@@ -10,6 +10,7 @@
               :elevation="0"
               class="dialogue-open-btn"
               :ripple="false"
+              style="overflow: hidden"
               >{{ formatText(field_type) }}</v-btn
             >
           </template>
@@ -120,6 +121,9 @@ export default {
   margin-top: 0.4rem;
   color: $primary-black !important;
   border-radius: 0.2rem !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
 }
 .dialogue-close-btn {
   font-size: 1.2rem !important;

@@ -4,7 +4,6 @@
       class="input-field-container"
       v-for="input in schemaObjectArray"
       :key="input.id"
-      style="transition: all 0.6s ease-in"
     >
       <div class="input-field-container-input-field">
         <v-text-field
@@ -63,6 +62,7 @@ export default {
         return this.objectList;
       },
       set(newData) {
+        // this.objectList = newData;
         this.$emit("updateSchemaArray", newData);
       },
     },
@@ -81,15 +81,16 @@ export default {
 
   methods: {
     ...mapMutations(["SET_SHOW_MESSAGE"]),
+
     deleteSchemaObject(id) {
       this.schemaObjectArray = this.schemaObjectArray.filter(
         (field) => field.id !== id
       );
-      this.$emit("updateSchemaArray", this.schemaObjectArray);
       this.SET_SHOW_MESSAGE({
         showMessage: true,
         showMessageText: "Delete Field successfully.",
       });
+      this.$emit("updateSchemaArray", this.schemaObjectArray.get());
     },
     setDataTypeToInputField(dataType, id) {
       let updateDataTypeArray = this.schemaObjectArray.map((schemaObject) => {
