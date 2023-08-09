@@ -175,6 +175,7 @@ export default {
 </style>
 
 <style lang="scss">
+@import "../sass/style.scss";
 .v-text-field.v-text-field--solo .v-input__control {
   min-height: fit-content !important;
   padding: 0;
