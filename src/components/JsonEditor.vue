@@ -172,6 +172,12 @@ export default {
           showMessageText: `Use Repair Option`,
         });
       }
+      this.countEdiorObject();
+      // console.log("this.countEdiorObject()", this.countEdiorObject());
+      // if (this.countEdiorObject()) {
+      //   console.log("Hai Bhai");
+      // }
+
       const aceEditor = this.editor.aceEditor;
       const currentPosition = aceEditor.getCursorPosition();
       const line = aceEditor.session.getLine(currentPosition.row);
@@ -199,6 +205,8 @@ export default {
       this.getEditorError();
 
       const errors = this.editorError;
+
+      this.countEdiorObject();
 
       if (errors.length > 0 && errors[0].text !== "Bad string") {
         this.SET_SHOW_MESSAGE({
@@ -290,7 +298,12 @@ export default {
         const aceEditor = this.editor.aceEditor;
         if (aceEditor) {
           const data = aceEditor.getValue();
-          return JSON.parse(data);
+          console.log("ERROR 301", this.countEdiorObject());
+          if (this.countEdiorObject()) {
+            throw new Error("Multiple objects found in editor");
+          } else {
+            return JSON.parse(data);
+          }
         }
       } catch (error) {
         if (error instanceof SyntaxError) {
@@ -305,18 +318,37 @@ export default {
               "An error occurred while parsing JSON data: " + error.message,
           });
         }
-
-        const aceEditor = this.editor.aceEditor;
-        if (aceEditor) {
-          const data = aceEditor.getValue();
-          return JSON.parse(data);
-        }
       }
     },
 
     emitUpdateData() {
+      console.log("COUNTER OBJECT", this.countEdiorObject());
+      if (this.countEdiorObject()) {
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: "Something wrong Editor",
+        });
+        return;
+      }
       this.$emit("updateDataFromEditor", this.getEditorData());
     },
+    countEdiorObject() {
+      const aceEditor = this.editor.aceEditor;
+      const data = aceEditor.getValue();
+      const objectCount = data.split("{").length - 1;
+      if (objectCount > 1) {
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: "Multiple Object Not Valid ",
+        });
+        return true;
+      }
+
+      return false;
+    },
+    // notValidJson(value) {
+    //   this.$emit("notValidData", value);
+    // },
   },
 };
 </script>

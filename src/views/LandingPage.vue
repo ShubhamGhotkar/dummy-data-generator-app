@@ -190,6 +190,8 @@ export default {
     generateDataFromSchema() {
       let outputObject = {};
       let errorArray = [];
+      console.log("Schema From 193", this.schemaObjectArray);
+
       for (let schema of this.schemaObjectArray) {
         let acessKey = this.fakerKeyArray.find(
           (fakerKey) => fakerKey.data_type === schema.schemaType
@@ -221,8 +223,10 @@ export default {
     },
     generateDataFromJsonSchema() {
       let updatedData = this.$refs.jsonEditor.getEditorData();
-      this.setEditorDataToSchemaObject(updatedData);
-      this.generateDataFromSchema();
+      if (!Array.isArray(updatedData)) {
+        this.setEditorDataToSchemaObject(updatedData);
+        this.generateDataFromSchema();
+      }
     },
 
     setEditorDataToSchemaObject(editorData) {
