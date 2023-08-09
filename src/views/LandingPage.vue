@@ -50,13 +50,6 @@
         <v-btn elevation="1" class="output-btn" @click="showJson = false"
           >API</v-btn
         >
-        <v-btn
-          elevation="1"
-          class="output-btn text-copy"
-          v-if="showCopyBtn"
-          @mouseenter="handleShowCopyBtn"
-          >Copy</v-btn
-        >
       </div>
       <div
         class="output-container-editor"
@@ -75,7 +68,16 @@
               enableSort: false,
             }"
             :jsonData="outputJsonData"
+            ref="jsonOutputData"
           />
+          <v-btn
+            elevation="1"
+            class="output-btn text-copy"
+            v-if="showCopyBtn"
+            @mouseenter="handleShowCopyBtn"
+            @click="copyDataToClickboard"
+            >Copy</v-btn
+          >
         </div>
         <div class="output-container-editor-Api" v-else></div>
       </div>
@@ -132,7 +134,7 @@ export default {
       showCopyBtn: false,
       showInputFloat: false,
       showEditorFloat: false,
-      outputJsonData: { key: "output will show here" },
+      outputJsonData: {},
       addFieldCount: 1,
       editorFieldData: [],
     };
@@ -248,6 +250,35 @@ export default {
 
       console.log(extractedObject);
       return extractedObject;
+    },
+
+    copyDataToClickboard() {
+      if (Object.keys(this.outputJsonData).length === 0) {
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: "No Data To Copy.",
+        });
+        return;
+      }
+      const jsonData = this.outputJsonData;
+      const tempTextarea = document.createElement("textarea");
+      tempTextarea.value = JSON.stringify(jsonData, null, 2);
+      document.body.appendChild(tempTextarea);
+      tempTextarea.select();
+      document.execCommand("copy");
+      try {
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: "Data copied to clipboard.",
+        });
+      } catch (error) {
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: "Copy failed. Please try again.",
+        });
+      } finally {
+        document.body.removeChild(tempTextarea);
+      }
     },
   },
 };
