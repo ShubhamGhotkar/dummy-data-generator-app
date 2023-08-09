@@ -280,8 +280,7 @@ export default {
     padding: 1rem 0 0 0;
     background: $primary-white;
 
-    // box-shadow: 0 0 0.9rem rgb(218, 216, 216);
-    box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
+    box-shadow: 0 7px 30px -10px $primary-box-shadow;
     &-tittle {
       width: 100%;
       margin: 0 auto;
@@ -320,9 +319,8 @@ export default {
 }
 .editor-section {
   flex: 0 0 52%;
-  // padding: 0 0 0.04rem 0.04rem !important;
   padding: 0 !important;
-  box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5) !important;
+  box-shadow: 0 7px 30px -10px $primary-box-shadow !important;
   overflow: hidden;
 }
 
@@ -339,8 +337,8 @@ export default {
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
-  border-top: 1px solid rgb(201, 200, 200);
-  border-bottom: 1px solid rgb(201, 200, 200);
+  border-top: 1px solid $primary-border;
+  border-bottom: 1px solid $primary-border;
   margin: 0.5rem 0;
 
   padding: 0.7rem 0 0.3rem 10rem;
@@ -353,7 +351,7 @@ export default {
       letter-spacing: 0.03rem;
       font-size: 1rem;
       font-weight: 500;
-      border: 1px solid rgb(201, 200, 200) !important;
+      border: 1px solid $primary-border !important;
       background: $primary-white;
       color: $primary-gray;
       text-align: center;
@@ -374,8 +372,7 @@ export default {
   align-items: center;
   gap: 0.3rem;
 
-  // box-shadow: 0 0 0.9rem rgb(218, 216, 216);
-  box-shadow: 0 7px 30px -10px rgba(150, 170, 180, 0.5);
+  box-shadow: 0 7px 30px -10px $primary-box-shadow;
   margin-top: 1.5rem;
   &-btn {
     flex: 0 0 4%;
@@ -426,6 +423,6 @@ export default {
   > .v-input__control
   > .v-input__slot {
   box-shadow: none;
-  border: 1px solid rgb(201, 200, 200) !important;
+  border: 1px solid $primary-border !important;
 }
 </style>
