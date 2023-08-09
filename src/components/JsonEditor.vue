@@ -107,8 +107,15 @@ export default {
         const currentPosition = aceEditor.getCursorPosition();
         const line = aceEditor.session.getLine(currentPosition.row);
         const currentWord = this.getCurrentWord(line, currentPosition.column);
+        const container = document.createElement("div");
         const suggestionItem = document.createElement("ul");
+        const showAllDataType = document.createElement("button");
+        showAllDataType.innerText = "Show All";
         suggestionItem.classList.add("selectOption");
+        showAllDataType.classList.add("show-all-datatype");
+        container.classList.add("suggestion-box-container");
+
+        container.appendChild(showAllDataType);
 
         let filteredSuggestions = fakerGenerateEntry.filter((suggestion) => {
           let fakerType = suggestion.data_type.toLocaleLowerCase();
@@ -131,9 +138,12 @@ export default {
 
         filteredSuggestions.forEach((suggestion) => {
           const option = document.createElement("li");
+          option.classList.add("list-item");
           option.textContent = suggestion.data_type;
           suggestionItem.appendChild(option);
         });
+
+        container.appendChild(suggestionItem);
 
         suggestionItem.addEventListener(
           "click",
@@ -146,14 +156,25 @@ export default {
           { once: true }
         );
 
-        suggestionItem.style.position = "absolute";
-        suggestionItem.style.top = currentPosition.row * 20 + "px";
-        suggestionItem.style.left = currentPosition.column * 10 + "px";
+        showAllDataType.addEventListener("click", () => {
+          console.log("click");
+          filteredSuggestions = fakerGenerateEntry;
+          suggestionItem.innerHTML = "";
+          filteredSuggestions.forEach((suggestion) => {
+            const option = document.createElement("li");
+            option.classList.add("list-item");
+            option.textContent = suggestion.data_type;
+            suggestionItem.appendChild(option);
+          });
+        });
+        container.style.position = "absolute";
+        container.style.top = currentPosition.row * 25 + "px";
+        container.style.left = currentPosition.column * 13 + "px";
 
-        suggestionBox.appendChild(suggestionItem);
+        suggestionBox.appendChild(container);
 
         this.$once("hook:beforeDestroy", () => {
-          suggestionItem.remove();
+          container.remove();
         });
       } catch (error) {
         this.SET_SHOW_MESSAGE({
@@ -173,10 +194,6 @@ export default {
         });
       }
       this.countEdiorObject();
-      // console.log("this.countEdiorObject()", this.countEdiorObject());
-      // if (this.countEdiorObject()) {
-      //   console.log("Hai Bhai");
-      // }
 
       const aceEditor = this.editor.aceEditor;
       const currentPosition = aceEditor.getCursorPosition();
@@ -256,13 +273,15 @@ export default {
     },
 
     hideSuggestion() {
-      const suggestion = document.getElementsByClassName("selectOption");
+      const suggestion = document.getElementsByClassName(
+        "suggestion-box-container"
+      );
       if (suggestion) {
         Array.from(suggestion).forEach((item) => {
           item.remove();
         });
+        this.editor.aceEditor.setReadOnly(false);
       }
-      this.editor.aceEditor.setReadOnly(false);
     },
     checkEditorError() {
       const aceEditor = this.editor.aceEditor;
@@ -346,14 +365,12 @@ export default {
 
       return false;
     },
-    // notValidJson(value) {
-    //   this.$emit("notValidData", value);
-    // },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import "../sass/style.scss";
 .json-editor-container {
   height: 100% !important;
   width: 100% !important;
@@ -389,25 +406,59 @@ export default {
   display: none;
 }
 
-.selectOption {
-  max-height: 10rem !important;
+.suggestion-box-container {
+  max-width: 20rem;
+  max-height: 10rem;
+  background: $primary-white !important;
+  padding: 0.5rem 0.8rem 0 0.8rem;
   box-shadow: 0 0 0.5rem $primary-whitsmoke;
-  z-index: 9999;
   border: 0.1rem solid $primary-whitsmoke;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.selectOption {
+  max-width: 10rem;
+  max-height: 10rem !important;
+  z-index: 9999;
   padding: 0.3rem 0.5rem;
-  background: $primary-white;
   outline: none;
   font-size: 1rem;
   color: $primary-gray;
   overflow-y: scroll;
-
+  overflow-x: hidden;
+  scroll-behavior: smooth;
   cursor: pointer;
   z-index: 9999999 !important;
-}
 
-/* Example CSS for highlighting */
-.highlighted-paste {
-  background-color: yellow !important; /* Replace with your desired highlight color */
-  opacity: 0.5; /* Adjust the opacity to your preference */
+  // &::-webkit-scrollbar {
+  //   width: 0.1cm;
+  // }
+}
+.show-all-datatype {
+  font-size: 0.8rem;
+  border: 0.1rem solid $primary-whitsmoke;
+  background: $primary-button-background;
+  color: $primary-white;
+  padding: 0.1rem 0.5rem;
+  border-radius: 0.3rem;
+  outline: none;
+  cursor: pointer;
+  align-self: flex-end;
+  border-bottom: 0.1rem solid $primary-whitsmoke;
+  &:hover {
+    transform: scale(1.03);
+  }
+}
+.list-item {
+  width: 100%;
+  font-size: 0.8rem;
+  border-bottom: 0.1rem solid $primary-whitsmoke;
+  margin: 0.3rem 0;
+  text-align: center;
+
+  text-overflow: ellipsis;
+  text-transform: capitalize;
 }
 </style>
