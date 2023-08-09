@@ -163,6 +163,7 @@ export default {
         showMessageText: "Another Field Added successfully.",
       });
     },
+
     handleshowInputFloat() {
       this.showInputFloat = true;
     },
@@ -298,9 +299,9 @@ export default {
       height: 90%;
       overflow-y: scroll;
       scroll-behavior: smooth;
-
+      scroll-snap-align: end;
       &::-webkit-scrollbar {
-        width: 1rem;
+        width: 0;
       }
     }
   }
@@ -410,7 +411,7 @@ export default {
 .row-input-item
   > .v-text-field.v-text-field--solo.v-input--dense
   > .v-input__control {
-  min-height: 35px !important;
+  min-height: 3.5rem !important;
 }
 .v-btn:not(.v-btn--round).v-size--default {
   min-width: 10px !important;

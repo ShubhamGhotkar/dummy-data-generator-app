@@ -27,7 +27,7 @@ export default {
   },
   data() {
     return {
-      // jsonEditorData: {},
+      jsonEditorData: {},
       jsonEditorOptions: {},
       showSuggestionOnEditor: false,
       editorError: [],
@@ -71,81 +71,18 @@ export default {
         const aceEditor = this.editor.aceEditor;
 
         if (aceEditor) {
-          const onEditorChange = (e) => {
-            this.getEditorError();
-            const errorsText = this.editorError.map((x) => x.text);
-
-            if (errorsText[0] === "Bad string") {
-              this.SET_SHOW_MESSAGE({
-                showMessage: true,
-                showMessageText: `Use Repair Option`,
-              });
-            }
-
-            const currentPosition = aceEditor.getCursorPosition();
-            const line = aceEditor.session.getLine(currentPosition.row);
-            const isBackspacePressed = e.action === "remove";
-            this.showSuggestionOnEditor =
-              line.indexOf(":") === line.lastIndexOf(":") ? true : false;
-            this.getEditorError();
-            if (
-              e.lines[0] === ":" &&
-              this.showSuggestionOnEditor &&
-              !isBackspacePressed
-            ) {
-              this.showSuggestions(...e.lines);
-              aceEditor.setReadOnly(true);
-            } else {
-              this.hideSuggestion();
-            }
-          };
-
-          const onEditorPaste = (e) => {
-            this.getEditorError();
-
-            const errors = this.editorError;
-
-            if (errors.length > 0 && errors[0].text !== "Bad string") {
-              this.SET_SHOW_MESSAGE({
-                showMessage: true,
-                showMessageText: `${errors[0].text} Error occurred while pasting data.\n ${e.text}`,
-              });
-            } else {
-              this.updatingJsonData = true;
-              this.SET_SHOW_MESSAGE({
-                showMessage: true,
-                showMessageText: "Data is pasted successfully.\n" + e.text,
-              });
-            }
-          };
-
-          const onEditorFocus = () => {
-            this.getEditorError();
-          };
-
-          const onEditorCopy = (e) => {
-            this.SET_SHOW_MESSAGE({
-              showMessage: true,
-              showMessageText: "Data copied successfully.\n" + e.text,
-            });
-          };
-
-          const onEditorCut = () => {
-            this.updatingJsonData = false;
-          };
-
-          aceEditor.getSession().on("change", onEditorChange);
-          aceEditor.on("paste", onEditorPaste);
-          aceEditor.on("focus", onEditorFocus);
-          aceEditor.on("copy", onEditorCopy);
-          aceEditor.on("cut", onEditorCut);
+          aceEditor.getSession().on("change", this.onEditorChange);
+          aceEditor.on("paste", this.onEditorPaste);
+          aceEditor.on("focus", this.onEditorFocus);
+          aceEditor.on("copy", this.onEditorCopy);
+          aceEditor.on("cut", this.onEditorCut);
 
           this.$once("hook:beforeDestroy", () => {
-            aceEditor.getSession().off("change", onEditorChange);
-            aceEditor.off("paste", onEditorPaste);
-            aceEditor.off("focus", onEditorFocus);
-            aceEditor.off("copy", onEditorCopy);
-            aceEditor.off("cut", onEditorCut);
+            aceEditor.getSession().off("change", this.onEditorChange);
+            aceEditor.off("paste", this.onEditorPaste);
+            aceEditor.off("focus", this.onEditorFocus);
+            aceEditor.off("copy", this.onEditorCopy);
+            aceEditor.off("cut", this.onEditorCut);
           });
         }
       } catch (error) {
@@ -224,6 +161,67 @@ export default {
           showMessageText: `Error showing suggestions:${error}`,
         });
       }
+    },
+    onEditorChange(e) {
+      this.getEditorError();
+      const errorsText = this.editorError.map((x) => x.text);
+
+      if (errorsText[0] === "Bad string") {
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: `Use Repair Option`,
+        });
+      }
+      const aceEditor = this.editor.aceEditor;
+      const currentPosition = aceEditor.getCursorPosition();
+      const line = aceEditor.session.getLine(currentPosition.row);
+      const isBackspacePressed = e.action === "remove";
+      this.showSuggestionOnEditor =
+        line.indexOf(":") === line.lastIndexOf(":") ? true : false;
+      this.getEditorError();
+      if (
+        e.lines[0] === ":" &&
+        this.showSuggestionOnEditor &&
+        !isBackspacePressed
+      ) {
+        this.showSuggestions(...e.lines);
+        aceEditor.setReadOnly(true);
+      } else {
+        this.hideSuggestion();
+      }
+    },
+
+    onEditorFocus() {
+      this.getEditorError();
+    },
+
+    onEditorPaste(e) {
+      this.getEditorError();
+
+      const errors = this.editorError;
+
+      if (errors.length > 0 && errors[0].text !== "Bad string") {
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: `${errors[0].text} Error occurred while pasting data.\n ${e.text}`,
+        });
+      } else {
+        this.updatingJsonData = true;
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: "Data is pasted successfully.\n" + e.text,
+        });
+      }
+    },
+    onEditorCopy(e) {
+      this.SET_SHOW_MESSAGE({
+        showMessage: true,
+        showMessageText: "Data copied successfully.\n" + e.text,
+      });
+    },
+
+    onEditorCut() {
+      this.updatingJsonData = false;
     },
 
     getCurrentWord(line, column) {
@@ -345,15 +343,15 @@ export default {
 
 .json-editor-container .ace-jsoneditor .ace_gutter {
   background: $primary-white !important;
-  color: #333;
-  border-right: 0.05rem solid #dadada;
-  border-left: 0.05rem solid #dadada;
+  color: $primary-text-color;
+  border-right: 0.05rem solid $secondary-border;
+  border-left: 0.05rem solid $secondary-border;
 }
 .json-editor-container .jsoneditor-statusbar {
   background: $primary-white !important;
-  color: #333;
-  border-top: 0.05rem solid #dadada;
-  border-bottom: 0.05rem solid #dadada;
+  color: $primary-text-color;
+  border-top: 0.05rem solid $secondary-border;
+  border-bottom: 0.05rem solid $secondary-border;
 }
 .json-editor-container .jsoneditor-poweredBy {
   display: none;
@@ -361,9 +359,9 @@ export default {
 
 .selectOption {
   max-height: 10rem !important;
-  box-shadow: 0 0 0.5rem whitesmoke;
+  box-shadow: 0 0 0.5rem $primary-whitsmoke;
   z-index: 9999;
-  border: 0.1rem solid whitesmoke;
+  border: 0.1rem solid $primary-whitsmoke;
   padding: 0.3rem 0.5rem;
   background: $primary-white;
   outline: none;

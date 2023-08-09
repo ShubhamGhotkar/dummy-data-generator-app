@@ -115,7 +115,7 @@ export default {
   width: 12rem;
   text-align: start !important;
   padding: 0 !important;
-  background: white !important;
+  background: $primary-white !important;
   border-radius: 0.3rem;
   border: 1px solid $primary-border !important;
   margin-top: 0.4rem;

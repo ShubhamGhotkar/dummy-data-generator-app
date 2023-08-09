@@ -189,7 +189,7 @@ export default {
   > .v-input__control
   > .v-input__slot {
   box-shadow: none !important;
-  border: 1px solid rgb(201, 200, 200) !important;
+  border: 1px solid $primary-border !important;
   padding: 0.05rem 0 0.05rem 0.8rem !important;
   margin-bottom: 0.5rem !important;
 }
