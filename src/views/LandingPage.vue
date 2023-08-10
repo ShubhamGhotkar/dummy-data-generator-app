@@ -30,7 +30,7 @@
       >
         <JsonEditor
           @updateDataFromEditor="setEditorDataToSchemaObject"
-          @updateSchemaArray="setUpdatedSchemaArray"
+          @setChangeData="setChangeData"
           :jsonData="sendData"
           ref="jsonEditor"
         />
@@ -285,6 +285,7 @@ export default {
         document.body.removeChild(tempTextarea);
       }
     },
+    setChangeData() {},
   },
 };
 </script>

@@ -215,6 +215,7 @@ export default {
         aceEditor.setReadOnly(true);
       } else {
         this.hideSuggestion();
+        this.$emit("setChangeData", this.getEditorData());
       }
     },
 
