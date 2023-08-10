@@ -65,6 +65,7 @@ export default {
 
   methods: {
     ...mapMutations(["SET_SHOW_MESSAGE"]),
+
     initJSONEditor() {
       try {
         const container = this.$refs.jsonEditorContainer;
@@ -187,18 +188,8 @@ export default {
         });
       }
     },
+
     onEditorChange(e) {
-      this.getEditorError();
-      const errorsText = this.editorError.map((x) => x.text);
-
-      if (errorsText[0] === "Bad string") {
-        this.SET_SHOW_MESSAGE({
-          showMessage: true,
-          showMessageText: `Use Repair Option`,
-        });
-      }
-      this.countEdiorObject();
-
       const aceEditor = this.editor.aceEditor;
       const currentPosition = aceEditor.getCursorPosition();
       const line = aceEditor.session.getLine(currentPosition.row);
@@ -217,6 +208,9 @@ export default {
         this.hideSuggestion();
         this.$emit("setChangeData", this.getEditorData());
       }
+
+      this.countEdiorObject();
+      this.getEditorError();
     },
 
     onEditorFocus() {
@@ -224,11 +218,7 @@ export default {
     },
 
     onEditorPaste(e) {
-      this.getEditorError();
-
       const errors = this.editorError;
-
-      this.countEdiorObject();
 
       if (errors.length > 0 && errors[0].text !== "Bad string") {
         this.SET_SHOW_MESSAGE({
@@ -242,7 +232,11 @@ export default {
           showMessageText: "Data is pasted successfully.\n" + e.text,
         });
       }
+
+      this.countEdiorObject();
+      this.getEditorError();
     },
+
     onEditorCopy(e) {
       this.SET_SHOW_MESSAGE({
         showMessage: true,
@@ -259,6 +253,7 @@ export default {
       const words = lineBeforeCursor.split(/\s+/);
       return words[words.length - 1];
     },
+
     insertSuggestion(suggestion) {
       const aceEditor = this.editor.aceEditor;
       const currentPosition = aceEditor.getCursorPosition();
@@ -288,6 +283,7 @@ export default {
         this.editor.aceEditor.setReadOnly(false);
       }
     },
+
     checkEditorError() {
       const aceEditor = this.editor.aceEditor;
       const errors = aceEditor
@@ -301,6 +297,7 @@ export default {
         return false;
       }
     },
+
     getEditorError() {
       const aceEditor = this.editor.aceEditor;
       const errors = aceEditor.getSession().getAnnotations();
@@ -330,10 +327,12 @@ export default {
         }
       } catch (error) {
         if (error instanceof SyntaxError) {
-          this.SET_SHOW_MESSAGE({
-            showMessage: true,
-            showMessageText: "Invalid JSON data. Check the input value.",
-          });
+          return;
+          // this.SET_SHOW_MESSAGE({
+          //   showMessage: true,
+          //   showMessageText:
+          //     "Invalid JSON data. Check the input value." + error,
+          // });
         } else {
           this.SET_SHOW_MESSAGE({
             showMessage: true,
@@ -355,6 +354,7 @@ export default {
       }
       this.$emit("updateDataFromEditor", this.getEditorData());
     },
+
     countEdiorObject() {
       const aceEditor = this.editor.aceEditor;
       const data = aceEditor.getValue();
@@ -411,10 +411,10 @@ export default {
 }
 
 .suggestion-box-container {
-  max-width: 20rem;
+  max-width: 25rem;
   max-height: 10rem;
-  background: $primary-white !important;
-  padding: 0.5rem 0.8rem 0 0.8rem;
+  background: $primary-whitsmoke !important;
+  padding: 0.5rem 0;
   box-shadow: 0 0 0.5rem $primary-whitsmoke;
   border: 0.1rem solid $primary-whitsmoke;
 
@@ -423,7 +423,7 @@ export default {
   flex-direction: column;
 }
 .selectOption {
-  max-width: 10rem;
+  max-width: 15rem;
   max-height: 10rem !important;
   z-index: 9999;
   padding: 0.3rem 0.5rem;
@@ -436,9 +436,9 @@ export default {
   cursor: pointer;
   z-index: 9999999 !important;
 
-  // &::-webkit-scrollbar {
-  //   width: 0.1cm;
-  // }
+  &::-webkit-scrollbar {
+    width: 0.1cm;
+  }
 }
 .show-all-datatype {
   font-size: 0.8rem;
@@ -458,11 +458,21 @@ export default {
 .list-item {
   width: 100%;
   font-size: 0.8rem;
-  border-bottom: 0.1rem solid $primary-whitsmoke;
-  margin: 0.3rem 0;
+  background: $primary-white;
+  // border-bottom: 0.1rem solid $primary-whitsmoke;
+  box-shadow: 0 0 0.5rem $primary-whitsmoke;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.3rem;
+  margin: 0.4rem 0;
   text-align: center;
+
+  overflow: hidden;
 
   text-overflow: ellipsis;
   text-transform: capitalize;
+
+  &:hover {
+    transform: scale(1.02);
+  }
 }
 </style>

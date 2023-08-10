@@ -191,7 +191,15 @@ export default {
     generateDataFromSchema() {
       let outputObject = {};
       let errorArray = [];
-      console.log("Schema From 193", this.schemaObjectArray);
+
+      if (this.schemaObjectArray.length === 0) {
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: `No Data To Generate`,
+        });
+
+        return;
+      }
 
       for (let schema of this.schemaObjectArray) {
         let acessKey = this.fakerKeyArray.find(
