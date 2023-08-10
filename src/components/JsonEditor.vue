@@ -43,6 +43,10 @@ export default {
     },
   },
 
+  updatedData() {
+    console.log("updated");
+    return this.getEditorData();
+  },
   created() {
     this.jsonEditorData = this.jsonData;
     this.jsonEditorOptions = this.options;
@@ -317,7 +321,6 @@ export default {
         const aceEditor = this.editor.aceEditor;
         if (aceEditor) {
           const data = aceEditor.getValue();
-          console.log("ERROR 301", this.countEdiorObject());
           if (this.countEdiorObject()) {
             throw new Error("Multiple objects found in editor");
           } else {

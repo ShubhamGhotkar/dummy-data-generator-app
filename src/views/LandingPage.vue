@@ -30,6 +30,7 @@
       >
         <JsonEditor
           @updateDataFromEditor="setEditorDataToSchemaObject"
+          @updateSchemaArray="setUpdatedSchemaArray"
           :jsonData="sendData"
           ref="jsonEditor"
         />
