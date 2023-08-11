@@ -19,19 +19,20 @@
                 class="justify-end"
                 style="display: flex; justify-content: flex-end; padding: 0"
               >
+              </v-card-actions>
+
+              <v-row
+                align="start"
+                align-content="start"
+                @click="dialog.value = false"
+                class="popup-v-row"
+              >
                 <v-btn
                   text
                   @click="dialog.value = false"
                   class="dialogue-close-btn"
-                  >X</v-btn
+                  >Close</v-btn
                 >
-              </v-card-actions>
-              <v-row
-                align="start"
-                align-content="start"
-                style="padding: 1rem"
-                @click="dialog.value = false"
-              >
                 <v-col v-for="fakerData in fakerDataArray" :key="fakerData.id">
                   <v-card
                     class="mx-auto hover"
@@ -124,14 +125,24 @@ export default {
   text-overflow: ellipsis !important;
 }
 
+.popup-v-row {
+  padding: 3rem 0 1.5rem 1.5rem;
+}
+
 .dialogue-close-btn {
   font-size: 1.2rem !important;
   height: 2rem !important;
   width: 2rem !important;
   padding: 0.5rem 0 0 0;
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
+  position: fixed !important;
+  right: 22.7%;
+  top: 6%;
+  border: 0.05rem solid $primary-border;
+  border-radius: 0.3rem !important;
+  background: $primary-white;
+  font-size: 1rem !important;
+  text-transform: lowercase !important;
+  z-index: 999;
 }
 
 .v-sheet.v-card:not(.v-sheet--outlined) {
