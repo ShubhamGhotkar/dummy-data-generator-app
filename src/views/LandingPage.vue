@@ -31,6 +31,7 @@
         <JsonEditor
           @updateDataFromEditor="setEditorDataToSchemaObject"
           @setChangeData="setChangeData"
+          @pasteEvent="pasteEvent"
           :jsonData="sendData"
           ref="jsonEditor"
         />
@@ -80,7 +81,9 @@
             >Copy</v-btn
           >
         </div>
-        <div class="output-container-editor-Api" v-else></div>
+        <div class="output-container-editor-Api" v-else>
+          <ApiView />
+        </div>
       </div>
     </div>
   </section>
@@ -94,10 +97,16 @@ import JsonEditor from "@/components/JsonEditor.vue";
 import { fakerGenerateEntry } from "../data/fakerData";
 import VSnackbar from "@/components/VSnackbar.vue";
 import { mapMutations } from "vuex";
+import ApiView from "@/components/ApiView.vue";
 export default {
   computed: {
-    sendData() {
-      return this.schemaObjectArray;
+    sendData: {
+      get() {
+        return this.schemaObjectArray;
+      },
+      set(newData) {
+        this.schemaObjectArray = newData;
+      },
     },
   },
   data() {
@@ -136,7 +145,6 @@ export default {
       showInputFloat: false,
       showEditorFloat: false,
       outputJsonData: {},
-      addFieldCount: 1,
       editorFieldData: [],
     };
   },
@@ -145,6 +153,7 @@ export default {
     FloatBtn,
     VSnackbar,
     JsonEditor,
+    ApiView,
   },
 
   mounted() {
@@ -156,7 +165,7 @@ export default {
     addAnotherFieldToInputArray() {
       let schemaObject = {
         id: uuidv4(),
-        schemaKey: `add_field_${this.addFieldCount++}`,
+        schemaKey: `New_field`,
         schemaType: "text",
       };
 
@@ -239,21 +248,23 @@ export default {
     },
 
     setEditorDataToSchemaObject(editorData) {
-      let updatedObject = [];
-      for (let [key, value] of Object.entries(editorData)) {
-        let object = {
-          id: uuidv4(),
-          schemaKey: key,
-          schemaType: value,
-        };
-        updatedObject.push(object);
-      }
+      if (editorData) {
+        let updatedObject = [];
+        for (let [key, value] of Object.entries(editorData)) {
+          let object = {
+            id: uuidv4(),
+            schemaKey: key,
+            schemaType: value,
+          };
+          updatedObject.push(object);
+        }
 
-      this.schemaObjectArray.splice(
-        0,
-        this.schemaObjectArray.length,
-        ...updatedObject
-      );
+        this.schemaObjectArray.splice(
+          0,
+          this.schemaObjectArray.length,
+          ...updatedObject
+        );
+      }
     },
     extractSchemaKeys(schemaObjectArray) {
       const extractedObject = schemaObjectArray.reduce((result, item) => {
@@ -261,7 +272,7 @@ export default {
         return result;
       }, {});
 
-      console.log(extractedObject);
+      // console.log(extractedObject);
       return extractedObject;
     },
 
@@ -293,7 +304,45 @@ export default {
         document.body.removeChild(tempTextarea);
       }
     },
-    setChangeData() {},
+    setChangeData() {
+      // console.log("CHANGE DATA FROM EDITOR", data);
+      // let updatedObject = [];
+      // for (let [key, value] of Object.entries(data)) {
+      //   let object = {
+      //     id: uuidv4(),
+      //     schemaKey: key,
+      //     schemaType: value,
+      //   };
+      //   updatedObject.push(object);
+      // }
+      // this.sendData = updatedObject;
+    },
+    pasteEvent(data) {
+      if (data) {
+        let updatedArray = this.converObjectToArray(data);
+
+        if (updatedArray && this.schemaObjectArray) {
+          this.schemaObjectArray.push(...updatedArray);
+          console.log("updatedArray", updatedArray);
+        }
+      }
+    },
+    converObjectToArray(editorData) {
+      if (editorData) {
+        let updatedObject = [];
+        for (let [key, value] of Object.entries(editorData)) {
+          let object = {
+            id: uuidv4(),
+            schemaKey: key,
+            schemaType: value,
+          };
+          updatedObject.push(object);
+        }
+
+        return updatedObject;
+      }
+      return null;
+    },
   },
 };
 </script>
@@ -435,7 +484,6 @@ export default {
     &-Api {
       width: 100%;
       height: 100%;
-      background: rgba(255, 255, 0, 0.267);
     }
   }
 }

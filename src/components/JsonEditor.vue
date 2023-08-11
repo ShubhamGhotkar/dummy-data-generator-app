@@ -7,6 +7,8 @@ import { fakerGenerateEntry } from "../data/fakerData";
 import { mapMutations } from "vuex";
 import JSONEditor from "jsoneditor";
 import "jsoneditor/dist/jsoneditor.min.css";
+// import { checkKeyPresent } from "../function/function";
+// import { jsonrepair } from "jsonrepair";
 
 export default {
   props: {
@@ -43,10 +45,6 @@ export default {
     },
   },
 
-  updatedData() {
-    console.log("updated");
-    return this.getEditorData();
-  },
   created() {
     this.jsonEditorData = this.jsonData;
     this.jsonEditorOptions = this.options;
@@ -71,6 +69,7 @@ export default {
         const container = this.$refs.jsonEditorContainer;
         this.editor = new JSONEditor(container, this.jsonEditorOptions);
 
+        // this.setDataToEditor(this.jsonEditorData);
         this.editor.set(this.getObjectFromArray(this.jsonEditorData));
 
         const aceEditor = this.editor.aceEditor;
@@ -217,31 +216,58 @@ export default {
       this.getEditorError();
     },
 
-    onEditorPaste(e) {
-      const errors = this.editorError;
-
-      if (errors.length > 0 && errors[0].text !== "Bad string") {
-        this.SET_SHOW_MESSAGE({
-          showMessage: true,
-          showMessageText: `${errors[0].text} Error occurred while pasting data.\n ${e.text}`,
-        });
-      } else {
-        this.updatingJsonData = true;
-        this.SET_SHOW_MESSAGE({
-          showMessage: true,
-          showMessageText: "Data is pasted successfully.\n" + e.text,
-        });
-      }
-
-      this.countEdiorObject();
-      this.getEditorError();
+    onEditorPaste() {
+      // let text = e.text;
+      // if (text) {
+      //   if (text.charAt(0) !== "{" && text.charAt(text.length - 1) !== "}") {
+      //     text = `{${text}}`;
+      //   }
+      //   try {
+      //     JSON.parse(text);
+      //     let checkValidText = checkKeyPresent({
+      //       ...JSON.parse(text),
+      //     });
+      //     let { invalidValue, updatedKey } = checkValidText;
+      //     if (invalidValue.length > 0) {
+      //       let errorMessage = invalidValue.map(
+      //         (invalidKey) => `${invalidKey.key}:${invalidKey.value}`
+      //       );
+      //       this.SET_SHOW_MESSAGE({
+      //         showMessage: true,
+      //         showMessageText: `${errorMessage} this key are not found.\n replace it value by "" string`,
+      //       });
+      //     }
+      //     // "Imagfefe": "imagefef_url"
+      //     // this.editor.set({});
+      //     console.log("updatedKey", updatedKey);
+      //     // this.$emit("pasteEvent", {
+      //     //   ...updatedKey,
+      //     // });
+      //   } catch (error) {
+      //     let checkSyntaxError = error instanceof SyntaxError;
+      //     if (!checkSyntaxError) {
+      //       this.SET_SHOW_MESSAGE({
+      //         showMessage: true,
+      //         showMessageText: `Something Wrong ${error}`,
+      //       });
+      //     }
+      //     console.log("SYNTAX ERROR", checkSyntaxError);
+      //   }
+      // }
+      // let data = this.getEditorData();
+      // if (data) {
+      //   checkKeyPresent({ ...this.getEditorData() });
+      // }
+      // this.countEdiorObject();
+      // this.getEditorError();
     },
 
-    onEditorCopy(e) {
-      this.SET_SHOW_MESSAGE({
-        showMessage: true,
-        showMessageText: "Data copied successfully.\n" + e.text,
-      });
+    onEditorCopy() {
+      return;
+      // this.SET_SHOW_MESSAGE({
+      //   showMessage: true,
+      //   showMessageText: "Data copied successfully.\n" + e.text,
+      // });
     },
 
     onEditorCut() {
@@ -369,6 +395,12 @@ export default {
 
       return false;
     },
+    // setDataToEditor(data) {
+    //   let editor = this.editor;
+    //   if (data && editor) {
+    //     editor.set(this.getObjectFromArray(data));
+    //   }
+    // },
   },
 };
 </script>

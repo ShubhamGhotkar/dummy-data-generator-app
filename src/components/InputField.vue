@@ -45,6 +45,7 @@
 <script>
 import DialogPopup from "./DialogPopup.vue";
 import { mapMutations } from "vuex";
+
 export default {
   props: {
     objectList: {
@@ -56,24 +57,13 @@ export default {
     DialogPopup,
   },
 
-  computed: {
-    schemaObjectArray: {
-      get() {
-        return this.objectList;
-      },
-      set(newData) {
-        // this.objectList = newData;
-        this.$emit("updateSchemaArray", newData);
-      },
-    },
-  },
   mounted() {
     this.schemaObjectArray = this.objectList;
   },
   data() {
     return {
       showList: false,
-      // schemaObjectArray: [],
+      schemaObjectArray: [],
       selectedItem: "String",
       items: ["String", "Number", "URL", "ID"],
     };
@@ -90,7 +80,7 @@ export default {
         showMessage: true,
         showMessageText: "Delete Field successfully.",
       });
-      this.$emit("updateSchemaArray", this.schemaObjectArray.get());
+      this.$emit("updateSchemaArray", this.schemaObjectArray);
     },
     setDataTypeToInputField(dataType, id) {
       let updateDataTypeArray = this.schemaObjectArray.map((schemaObject) => {
