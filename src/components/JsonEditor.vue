@@ -131,6 +131,7 @@ export default {
 
         if (filteredSuggestions.length === 0) {
           filteredSuggestions = fakerGenerateEntry;
+          container.removeChild(showAllDataType);
         }
         const suggestionBox = this.$refs.jsonEditorContainer;
 
