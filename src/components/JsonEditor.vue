@@ -245,9 +245,9 @@ export default {
           // "random": "random_data"
           // this.editor.set({});
           console.log("updatedKey", updatedKey);
-          // this.$emit("pasteEvent", {
-          //   ...updatedKey,
-          // });
+          this.$emit("pasteEvent", {
+            ...updatedKey,
+          });
         } catch (error) {
           let checkSyntaxError = error instanceof SyntaxError;
           if (!checkSyntaxError) {
@@ -400,6 +400,13 @@ export default {
       }
 
       return false;
+    },
+
+    setEditorReadOnly() {
+      let editor = this.editor.aceEditor;
+      if (editor) {
+        editor.setReadOnly(true);
+      }
     },
   },
 };

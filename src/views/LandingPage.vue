@@ -65,15 +65,7 @@
           @mouseenter="handleShowCopyBtn"
           v-if="showJson"
         >
-          <JsonEditor
-            :options="{
-              mode: 'text',
-              enableTransform: false,
-              enableSort: false,
-            }"
-            :jsonData="outputJsonData"
-            ref="jsonOutputData"
-          />
+          <JsonEditor :jsonData="outputJsonData" ref="jsonOutputData" />
           <v-btn
             elevation="1"
             class="output-btn text-copy"
@@ -158,6 +150,7 @@ export default {
   mounted() {
     this.fakerKeyArray = fakerGenerateEntry;
     this.editorFieldData = this.schemaObjectArray;
+    this.$refs.jsonOutputData.setEditorReadOnly();
   },
   methods: {
     ...mapMutations(["SET_SHOW_MESSAGE"]),
