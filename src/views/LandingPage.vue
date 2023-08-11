@@ -31,6 +31,7 @@
         <JsonEditor
           @updateDataFromEditor="setEditorDataToSchemaObject"
           @setChangeData="setChangeData"
+          @pasteEvent="pasteEvent"
           :jsonData="sendData"
           ref="jsonEditor"
         />
@@ -80,7 +81,9 @@
             >Copy</v-btn
           >
         </div>
-        <div class="output-container-editor-Api" v-else></div>
+        <div class="output-container-editor-Api" v-else>
+          <ApiView />
+        </div>
       </div>
     </div>
   </section>
@@ -94,6 +97,7 @@ import JsonEditor from "@/components/JsonEditor.vue";
 import { fakerGenerateEntry } from "../data/fakerData";
 import VSnackbar from "@/components/VSnackbar.vue";
 import { mapMutations } from "vuex";
+import ApiView from "@/components/ApiView.vue";
 export default {
   computed: {
     sendData() {
@@ -136,7 +140,6 @@ export default {
       showInputFloat: false,
       showEditorFloat: false,
       outputJsonData: {},
-      addFieldCount: 1,
       editorFieldData: [],
     };
   },
@@ -145,6 +148,7 @@ export default {
     FloatBtn,
     VSnackbar,
     JsonEditor,
+    ApiView,
   },
 
   mounted() {
@@ -156,7 +160,7 @@ export default {
     addAnotherFieldToInputArray() {
       let schemaObject = {
         id: uuidv4(),
-        schemaKey: `add_field_${this.addFieldCount++}`,
+        schemaKey: `New_field`,
         schemaType: "text",
       };
 
@@ -294,6 +298,43 @@ export default {
       }
     },
     setChangeData() {},
+    pasteEvent(data) {
+      if (data) {
+        // this.setEditorDataToSchemaObject(data);
+        let updatedArray = this.converObjectToArray(data);
+
+        if (updatedArray && this.schemaObjectArray) {
+          this.schemaObjectArray.push(...updatedArray);
+          // this.schemaObjectArray.splice(0, this.schemaObjectArray.length, [
+          //   ...this.schemaObjectArray.length,
+          //   ...updatedArray,
+          // ]);
+          //   this.schemaObjectArray = [
+          //     ...this.this.schemaObjectArray,
+          //     ...updatedArray,
+          //   ];
+          console.log("updatedArray", updatedArray);
+        }
+        // this.schemaObjectArray = updatedArray;
+        // "Imagcde": "image_dcdurl"
+      }
+    },
+    converObjectToArray(editorData) {
+      if (editorData) {
+        let updatedObject = [];
+        for (let [key, value] of Object.entries(editorData)) {
+          let object = {
+            id: uuidv4(),
+            schemaKey: key,
+            schemaType: value,
+          };
+          updatedObject.push(object);
+        }
+
+        return updatedObject;
+      }
+      return null;
+    },
   },
 };
 </script>
