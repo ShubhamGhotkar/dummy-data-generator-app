@@ -37,8 +37,10 @@ export default {
   watch: {
     jsonData: {
       handler(newData) {
-        this.jsonEditorData = newData;
-        this.editor.set(this.getObjectFromArray(this.jsonEditorData));
+        if (newData) {
+          this.jsonEditorData = newData;
+          this.editor.set(this.getObjectFromArray(this.jsonEditorData));
+        }
       },
       deep: true,
     },
@@ -164,7 +166,6 @@ export default {
         );
 
         showAllDataType.addEventListener("click", () => {
-          console.log("click");
           filteredSuggestions = fakerGenerateEntry;
           suggestionItem.innerHTML = "";
           filteredSuggestions.forEach((suggestion) => {
@@ -173,6 +174,7 @@ export default {
             option.textContent = suggestion.data_type;
             suggestionItem.appendChild(option);
           });
+          container.removeChild(showAllDataType);
         });
         container.style.position = "absolute";
         container.style.top = currentPosition.row * 25 + "px";

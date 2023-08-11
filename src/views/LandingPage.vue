@@ -21,6 +21,7 @@
           @addAnotherFieldToInputArray="addAnotherFieldToInputArray"
           @mouseenter="handleshowInputFloat"
           @generateData="generateDataFromSchema"
+          @getRowsValue="setRowsValue"
         />
       </div>
       <div
@@ -40,6 +41,7 @@
           :showFloat="showEditorFloat"
           @mouseenter="handleshowEditorFloat"
           @generateData="generateDataFromJsonSchema"
+          @getRowsValue="setRowsValue"
         />
       </div>
       <VSnackbar />
@@ -125,12 +127,12 @@ export default {
 
         {
           id: uuidv4(),
-          schemaKey: "Full Name",
+          schemaKey: "full_name",
           schemaType: "full_name",
         },
         {
           id: uuidv4(),
-          schemaKey: "Image",
+          schemaKey: "image",
           schemaType: "image_url",
         },
       ],
@@ -141,6 +143,8 @@ export default {
       showEditorFloat: false,
       outputJsonData: {},
       editorFieldData: [],
+      noOfRows: 0,
+      index: 1,
     };
   },
   components: {
@@ -160,7 +164,7 @@ export default {
     addAnotherFieldToInputArray() {
       let schemaObject = {
         id: uuidv4(),
-        schemaKey: `New_field`,
+        schemaKey: `New_field${this.index++}`,
         schemaType: "text",
       };
 
@@ -202,6 +206,20 @@ export default {
           showMessageText: `No Data To Generate`,
         });
 
+        return;
+      }
+
+      if (this.noOfRows === 0) {
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: `No of Rows Required...!`,
+        });
+        return;
+      } else if (this.noOfRows > 1000) {
+        this.SET_SHOW_MESSAGE({
+          showMessage: true,
+          showMessageText: `No of Rows Exceed the Limits...!`,
+        });
         return;
       }
 
@@ -253,11 +271,7 @@ export default {
         updatedObject.push(object);
       }
 
-      this.schemaObjectArray.splice(
-        0,
-        this.schemaObjectArray.length,
-        ...updatedObject
-      );
+      this.schemaObjectArray = updatedObject;
     },
     extractSchemaKeys(schemaObjectArray) {
       const extractedObject = schemaObjectArray.reduce((result, item) => {
@@ -334,6 +348,10 @@ export default {
         return updatedObject;
       }
       return null;
+    },
+
+    setRowsValue(data) {
+      this.noOfRows = data;
     },
   },
 };

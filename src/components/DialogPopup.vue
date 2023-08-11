@@ -10,7 +10,6 @@
               :elevation="0"
               class="dialogue-open-btn"
               :ripple="false"
-              style="overflow: hidden"
               >{{ formatText(field_type) }}</v-btn
             >
           </template>
@@ -113,7 +112,6 @@ export default {
 .dialogue-open-btn {
   height: 2.2rem !important;
   width: 12rem;
-  text-align: start !important;
   padding: 0 !important;
   background: $primary-white !important;
   border-radius: 0.3rem;
@@ -125,6 +123,7 @@ export default {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
 }
+
 .dialogue-close-btn {
   font-size: 1.2rem !important;
   height: 2rem !important;
@@ -143,8 +142,11 @@ export default {
 
   scroll-behavior: smooth;
 }
-// .dialog-popup .v-btn__content {
-//   // text-transform: none;
-//   // font-weight: inherit;
-// }
+.dialog-popup .v-btn__content {
+  width: 90% !important;
+  justify-content: start;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
 </style>

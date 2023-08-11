@@ -16,12 +16,14 @@
         </div>
         <div class="float-btn-item">
           <v-text-field
+            v-model="rows"
             solo
             dense
             placeholder="No of Rows"
             class="float-btn-item-text-field"
             type="Number"
             :min="1"
+            @input="rowsInputHandler"
           ></v-text-field>
         </div>
       </div>
@@ -49,7 +51,12 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+      rows: 0,
+    };
+  },
+  mounted() {
+    this.rows = this.noOfRow;
   },
   methods: {
     addAnotherFieldToInputArray() {
@@ -57,6 +64,9 @@ export default {
     },
     generateData() {
       this.$emit("generateData");
+    },
+    rowsInputHandler() {
+      this.$emit("getRowsValue", this.rows);
     },
   },
 };
